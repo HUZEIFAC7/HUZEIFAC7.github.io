@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Huzeifa Asif - Data Scientist & AI Engineer</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Preload Hero Image -->
+    <link rel="preload" as="image" href="huzeifa.jpg">
+</head>
+
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Background Effects -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <a href="#" class="logo">
+                <span>H</span>uzeifa
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="#home" class="active">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#skills">Skills</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#achievements">Achievements</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <div class="menu-btn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <div class="profile-container parallax-card">
+                <img src="huzeifa.jpg" alt="Huzeifa Asif" class="profile-image">
+                <div class="profile-glow"></div>
+            </div>
+            <h1 class="reveal-text neon-glow">Huzeifa Asif</h1>
+            <p class="reveal-text">Data Scientist & AI Engineer</p>
+
+            <!-- Social Links -->
+            <div class="social-links">
+                <a href="https://github.com/HUZEIFAC7" target="_blank" class="github" aria-label="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://linkedin.com/in/huzeifa-asif-849369213/" target="_blank" class="linkedin" aria-label="LinkedIn">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+                <a href="mailto:huzeifa888@gmail.com" class="email" aria-label="Email">
+                    <i class="fas fa-envelope"></i>
+                </a>
+            </div>
+            <!-- CV Download -->
+            <div class="cv-download">
+                <a href="Huzeifa_Asif_Data_Scientist_CV.pdf" download class="download-btn">
+                    <i class="fas fa-download"></i>
+                    <span>Download CV</span>
+                    <div class="download-animation"></div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="scroll-indicator">
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+            <span>Scroll Down</span>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title reveal-text">About Me</h2>
+            <div class="about-content parallax-card">
+                <div class="about-text">
+                    <p class="reveal-text">
+                        Computer Science graduate passionate about data science, with hands-on experience in Python,
+                        data analysis (Pandas, NumPy),
+                        and machine learning (TensorFlow, OpenCV). Proficient in SQL, data visualization (Power BI), and
+                        collaborative tools like Git.
+                    </p>
+                    <div class="education-info reveal-text">
+                        <h3>Education</h3>
+                        <div class="education-card">
+                            <div class="edu-title">BACHELOR OF SCIENCE IN COMPUTER SCIENCE</div>
+                            <div class="edu-school">Bahria University, Lahore, Pakistan</div>
+                            <div class="edu-date">1 FEB 2021 – 15 JAN 2025</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-stats">
+                    <div class="stat-item reveal-text">
+                        <h3>3+</h3>
+                        <p>Gold Medals</p>
+                    </div>
+                    <div class="stat-item reveal-text">
+                        <h3>2</h3>
+                        <p>Internships</p>
+                    </div>
+                    <div class="stat-item reveal-text">
+                        <h3>GDSC</h3>
+                        <p>Core Member</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="skills">
+        <div class="container">
+            <h2 class="section-title reveal-text">Skills & Expertise</h2>
+            <div class="skills-grid">
+                <!-- Programming -->
+                <div class="skill-category parallax-card">
+                    <h3>Programming Languages</h3>
+                    <div class="skill-bars">
+                        <div class="skill-bar">
+                            <div class="skill-info">
+                                <span>Python</span>
+                                <span>95%</span>
+                            </div>
+                            <div class="progress-line"><span data-percent="95"></span></div>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-info">
+                                <span>SQL</span>
+                                <span>88%</span>
+                            </div>
+                            <div class="progress-line"><span data-percent="88"></span></div>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-info">
+                                <span>C++</span>
+                                <span>85%</span>
+                            </div>
+                            <div class="progress-line"><span data-percent="85"></span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Science -->
+                <div class="skill-category parallax-card">
+                    <h3>Data Science & ML</h3>
+                    <div class="tech-stack">
+                        <span class="tech-item">NumPy</span>
+                        <span class="tech-item">Scikit-learn</span>
+                        <span class="tech-item">TensorFlow</span>
+                        <span class="tech-item">PyTorch</span>
+                        <span class="tech-item">OpenCV</span>
+                        <span class="tech-item">Regression Analysis</span>
+                        <span class="tech-item">Classification</span>
+                        <span class="tech-item">Clustering</span>
+                    </div>
+                </div>
+
+                <!-- Tools -->
+                <div class="skill-category parallax-card">
+                    <h3>Tools & Technologies</h3>
+                    <div class="tech-stack">
+                        <span class="tech-item">Git</span>
+                        <span class="tech-item">Jupyter Notebook</span>
+                        <span class="tech-item">VS Code</span>
+                        <span class="tech-item">Linux</span>
+                        <span class="tech-item">Firebase</span>
+                        <span class="tech-item">Power BI</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coursework -->
+            <div class="coursework mt-8">
+                <h3 class="section-subtitle reveal-text">Relevant Coursework</h3>
+                <div class="tech-stack coursework-grid">
+                    <span class="tech-item">Introduction to Data Science</span>
+                    <span class="tech-item">Artificial Intelligence</span>
+                    <span class="tech-item">Database Management Systems</span>
+                    <span class="tech-item">Data Structures & Algorithms</span>
+                    <span class="tech-item">Probability & Statistics</span>
+                    <span class="tech-item">Object-Oriented Programming</span>
+                    <span class="tech-item">Cloud Computing</span>
+                    <span class="tech-item">Mobile Application Development</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="projects">
+        <div class="container">
+            <h2 class="section-title reveal-text">Featured Projects</h2>
+            <div class="projects-grid">
+                <!-- EyeQ Project -->
+                <div class="project-card parallax-card">
+                    <div class="project-content">
+                        <div class="project-header">
+                            <i class="fas fa-eye project-icon"></i>
+                            <h3>EyeQ: Quiz Difficulty Analysis</h3>
+                        </div>
+                        <p>Developed a cross-platform mobile app using Python and React Native to assess quiz difficulty
+                            through eye-tracking.
+                            Integrated TensorFlow and PyTorch for real-time feedback.</p>
+                        <div class="project-stats">
+                            <div class="stat">
+                                <i class="fas fa-users"></i>
+                                <span>20+ Users</span>
+                            </div>
+                            <div class="stat">
+                                <i class="fas fa-code-branch"></i>
+                                <span>Real-time Analysis</span>
+                            </div>
+                        </div>
+                        <div class="tech-stack">
+                            <span class="tech-item">Python</span>
+                            <span class="tech-item">React Native</span>
+                            <span class="tech-item">TensorFlow</span>
+                            <span class="tech-item">PyTorch</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Processing Suite -->
+                <div class="project-card parallax-card">
+                    <div class="project-content">
+                        <div class="project-header">
+                            <i class="fas fa-database project-icon"></i>
+                            <h3>Data Processing Automation Suite</h3>
+                        </div>
+                        <p>Engineered a desktop application using Python, PyQt5, and Pandas to automate financial data
+                            processing
+                            and analysis.</p>
+                        <div class="project-stats">
+                            <div class="stat">
+                                <i class="fas fa-clock"></i>
+                                <span>Automated Workflow</span>
+                            </div>
+                            <div class="stat">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Real-time Processing</span>
+                            </div>
+                        </div>
+                        <div class="tech-stack">
+                            <span class="tech-item">Python</span>
+                            <span class="tech-item">PyQt5</span>
+                            <span class="tech-item">Pandas</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Achievements Section -->
+    <section id="achievements" class="achievements">
+        <div class="container">
+            <h2 class="section-title reveal-text">Achievements</h2>
+            <div class="achievements-grid">
+                <!-- Sports -->
+                <div class="achievement-card parallax-card">
+                    <div class="achievement-icon">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <h3>Sports Excellence</h3>
+                    <ul>
+                        <li>Gold Medal in Badminton Singles (2024)</li>
+                        <li>Gold Medal in Badminton Doubles (2024)</li>
+                        <li>Silver Medal in Badminton Doubles (2022)</li>
+                    </ul>
+                </div>
+
+                <!-- Academic -->
+                <div class="achievement-card parallax-card">
+                    <div class="achievement-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>Academic Leadership</h3>
+                    <ul>
+                        <li>GDSC Core Team Member (2023-2024)</li>
+                        <li>University Badminton Team Captain</li>
+                        <li>Led Championship-Winning Team</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title reveal-text">Get In Touch</h2>
+            <div class="contact-content parallax-card">
+                <form id="contact-form" class="reveal-text">
+                    <div class="input-group">
+                        <input type="text" id="name" required>
+                        <label for="name">Name</label>
+                    </div>
+                    <div class="input-group">
+                        <input type="email" id="email" required>
+                        <label for="email">Email</label>
+                    </div>
+                    <div class="input-group">
+                        <textarea id="message" required></textarea>
+                        <label for="message">Message</label>
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        <span>Send Message</span>
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-text">
+                    <p>© 2024 Huzeifa Asif. All rights reserved.</p>
+                </div>
+                <div class="footer-social">
+                    <a href="https://github.com/HUZEIFAC7" target="_blank"><i class="fab fa-github"></i></a>
+                    <a href="https://linkedin.com/in/huzeifa-asif-849369213/" target="_blank"><i
+                            class="fab fa-linkedin"></i></a>
+                    <a href="mailto:huzeifa888@gmail.com"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+
+</html>
