@@ -163,10 +163,50 @@ document.querySelectorAll('.parallax-card').forEach(card => {
 });
 
 // Form handling
+// Add this to your script.js
 const contactForm = document.getElementById('contact-form');
-contactForm?.addEventListener('submit', e => {
+const successMessage = document.getElementById('success-message');
+const errorMessage = document.getElementById('error-message');
+
+contactForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    // Add your form submission logic here
-    alert('Message sent successfully!');
-    contactForm.reset();
+    
+    const submitBtn = contactForm.querySelector('.submit-btn');
+    const submitSpan = submitBtn.querySelector('span');
+    const originalText = submitSpan.textContent;
+    
+    // Reset messages
+    successMessage.style.display = 'none';
+    errorMessage.style.display = 'none';
+    
+    // Disable button and show loading state
+    submitBtn.disabled = true;
+    submitSpan.textContent = 'Sending...';
+
+    try {
+        const response = await fetch(contactForm.action, {
+            method: 'POST',
+            body: new FormData(contactForm),
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            // Show success message
+            contactForm.reset();
+            successMessage.style.display = 'block';
+            setTimeout(() => successMessage.style.display = 'none', 5000);
+        } else {
+            throw new Error('Failed to send message');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        errorMessage.style.display = 'block';
+        setTimeout(() => errorMessage.style.display = 'none', 5000);
+    } finally {
+        // Reset button state
+        submitBtn.disabled = false;
+        submitSpan.textContent = originalText;
+    }
 });

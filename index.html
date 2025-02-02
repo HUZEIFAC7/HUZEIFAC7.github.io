@@ -305,32 +305,39 @@
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="contact">
-        <div class="container">
-            <h2 class="section-title reveal-text">Get In Touch</h2>
-            <div class="contact-content parallax-card">
-                <form id="contact-form" class="reveal-text">
-                    <div class="input-group">
-                        <input type="text" id="name" required>
-                        <label for="name">Name</label>
-                    </div>
-                    <div class="input-group">
-                        <input type="email" id="email" required>
-                        <label for="email">Email</label>
-                    </div>
-                    <div class="input-group">
-                        <textarea id="message" required></textarea>
-                        <label for="message">Message</label>
-                    </div>
-                    <button type="submit" class="submit-btn">
-                        <span>Send Message</span>
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                </form>
+<section id="contact" class="contact">
+    <div class="container">
+        <h2 class="section-title reveal-text">Get In Touch</h2>
+        <div class="contact-content parallax-card">
+            <form id="contact-form" action="https://formspree.io/f/meoeklrr" method="POST">
+                <div class="input-group">
+                    <input type="text" id="name" name="name" required>
+                    <label for="name">Name</label>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="email" name="email" required>
+                    <label for="email">Email</label>
+                </div>
+                <div class="input-group">
+                    <textarea id="message" name="message" required></textarea>
+                    <label for="message">Message</label>
+                </div>
+                <input type="hidden" name="_subject" value="New Contact Form Message">
+                <input type="hidden" name="_replyto" value="%email%">
+                <button type="submit" class="submit-btn">
+                    <span>Send Message</span>
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+            <div id="success-message" class="message success" style="display: none;">
+                Message sent successfully! I'll get back to you soon.
+            </div>
+            <div id="error-message" class="message error" style="display: none;">
+                Failed to send message. Please try again.
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- Footer -->
     <footer class="footer">
