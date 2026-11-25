@@ -13,9 +13,8 @@ project:
 website:
   title: "Huzeifa Asif"
   description: >
-    Data science and machine learning portfolio of Huzeifa Asif: MS Data
-    Science student at the University of Central Punjab and software engineer
-    who ships data tools that real businesses use every day.
+    Data science and machine learning portfolio of Huzeifa Asif, a software
+    engineer who ships data tools that real businesses use every day.
   site-url: https://huzeifac7.github.io
   repo-url: https://github.com/HUZEIFAC7/HUZEIFAC7.github.io
   favicon: assets/img/favicon.svg

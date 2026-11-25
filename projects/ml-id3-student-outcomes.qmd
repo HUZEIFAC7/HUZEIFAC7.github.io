@@ -5,7 +5,7 @@ description: "Entropy and information gain computed by hand for an early-warning
 
 ```{=html}
 <div class="case-head">
-  <span class="badge-status research">Machine learning · MS Data Science</span>
+  <span class="badge-status research">Machine learning</span>
 </div>
 <div class="actions">
   <a class="btn-hz primary" href="../assets/papers/ID3_Decision_Tree_Report.pdf"><i class="bi bi-file-earmark-pdf"></i> Hand-written derivation (PDF)</a>

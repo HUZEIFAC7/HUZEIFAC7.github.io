@@ -19,7 +19,7 @@ toc: true
   <div><span>Data</span><p>57,215 head-to-head battles between 64 LLMs (LMSYS Chatbot Arena)</p></div>
   <div><span>Model</span><p>DeBERTa-v3 cross-encoder fused with 16 interpretable style features</p></div>
   <div><span>Stack</span><p>PyTorch · Hugging Face · LightGBM · SHAP · scikit-learn</p></div>
-  <div><span>Authors</span><p><b>Huzeifa Asif</b>, Kashif Bacha · MS Data Science, University of Central Punjab</p></div>
+  <div><span>Authors</span><p><b>Huzeifa Asif</b>, Kashif Bacha</p></div>
 </div>
 ```
 

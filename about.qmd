@@ -1,14 +1,14 @@
 ---
 title: "About me"
-description: "Huzeifa Asif: MS Data Science student at the University of Central Punjab and software engineer, Lahore."
+description: "Huzeifa Asif: software engineer moving into machine learning and data science, Lahore."
 ---
 
 ```{=html}
 <div class="about-head no-photo">
   <div>
     <p class="lead-text" style="margin:0">I'm a software engineer moving into machine learning and data
-    science. I build data tools that real businesses use every day, and I'm now doing an MS in
-    Data Science to put that engineering on solid statistical and research ground.</p>
+    science. I build data tools that real businesses use every day, and I bring the same care to
+    machine learning: sound evaluation, honest baselines and models people can act on.</p>
     <div class="actions">
       <a class="btn-hz primary" href="assets/cv/Huzeifa_Asif_CV.pdf" download><i class="bi bi-download"></i> Download CV</a>
       <a class="btn-hz" href="mailto:huzeifa888@gmail.com"><i class="bi bi-envelope"></i> huzeifa888@gmail.com</a>
@@ -58,16 +58,6 @@ baselines, calibrated probabilities and error analysis that says where a model f
 ## Education
 
 ::: {.edu-grid}
-::: {.role}
-[2026 – present]{.role-when}
-
-[MS Data Science]{.role-title}
-
-[University of Central Punjab, Lahore]{.role-org}
-
-Machine Learning · Advanced Human–Computer Interaction · Big Data.
-[Research paper on chatbot preference prediction →](projects/hci-chatbot-preference.qmd)
-:::
 ::: {.role}
 [2021 – 2025]{.role-when}
 

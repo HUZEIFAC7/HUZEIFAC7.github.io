@@ -6,7 +6,7 @@ image: ../assets/figures/ml/fig2_roc_pr_curves.png
 
 ```{=html}
 <div class="case-head">
-  <span class="badge-status research">Machine learning · MS Data Science</span>
+  <span class="badge-status research">Machine learning</span>
 </div>
 <div class="actions">
   <a class="btn-hz primary" href="../assets/papers/Breast_Cancer_DT_RF_KNN_Report.pdf"><i class="bi bi-file-earmark-pdf"></i> Full report (PDF)</a>
