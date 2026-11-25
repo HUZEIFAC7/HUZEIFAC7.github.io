@@ -4,8 +4,7 @@ description: "Huzeifa Asif: MS Data Science student at the University of Central
 ---
 
 ```{=html}
-<div class="about-head">
-  <img src="assets/img/huzeifa.jpg" alt="Portrait of Huzeifa Asif">
+<div class="about-head no-photo">
   <div>
     <p class="lead-text" style="margin:0">I'm a software engineer moving into machine learning and data
     science. I build data tools that real businesses use every day, and I'm now doing an MS in

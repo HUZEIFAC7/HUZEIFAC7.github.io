@@ -430,3 +430,26 @@ div.wcard:hover { transform: none; box-shadow: none; }
   .hero-photo { width: min(240px, 68vw); }
   .hero-photo .float.f2 { right: -2%; top: 2%; }
 }
+
+/* Hero side panel (replaces the portrait) */
+.hero-now {
+  background: rgba(13,17,38,.55); backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.14); border-radius: 20px; padding: 1.3rem 1.35rem;
+  box-shadow: 0 24px 60px -30px rgba(0,0,0,.7);
+  .now-title { display: inline-flex; gap: .4rem; align-items: center; font-size: .74rem; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase; color: #F5B041; }
+  ul { list-style: none; padding: 0; margin: 1rem 0 0; display: grid; gap: .95rem; }
+  li { display: grid; grid-template-columns: 2.3rem minmax(0, 1fr); gap: .75rem; align-items: center;
+    font-size: .84rem; color: #B4B9D6; line-height: 1.35; }
+  li > i { width: 2.3rem; height: 2.3rem; border-radius: 11px; display: grid; place-items: center;
+    background: rgba(129,140,248,.16); color: #A5ACFF; font-size: 1.05rem; }
+  li > i.live { background: rgba(74,222,128,.14); color: #4ADE80; }
+  li > i.amber { background: rgba(245,176,65,.15); color: #F5B041; }
+  b { display: block; color: #fff; font-size: .95rem; font-family: "Space Grotesk", sans-serif; }
+}
+.about-head.no-photo { grid-template-columns: minmax(0, 1fr); }
+/* Quarto adds its .page-columns grid to raw-HTML blocks on full-width pages; keep our own layout. */
+.hero.page-columns { display: block !important; }
+.hero-inner.page-columns { display: grid !important; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr) !important; }
+.hero-inner.page-columns > * { grid-column: auto !important; }
+@media (max-width: 880px) { .hero-inner.page-columns { grid-template-columns: minmax(0, 1fr) !important; } }

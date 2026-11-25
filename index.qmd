@@ -2,7 +2,6 @@
 title: "Huzeifa Asif · Data Science & Machine Learning"
 pagetitle: "Huzeifa Asif · Data Science & Machine Learning"
 description: "Portfolio of Huzeifa Asif: MS Data Science student and software engineer. Research on chatbot preference prediction, machine learning, big data with Spark, and software in daily business use."
-image: assets/img/huzeifa.jpg
 page-layout: full
 toc: false
 ---
@@ -27,11 +26,14 @@ toc: false
         <a class="btn-hero ghost" href="https://github.com/HUZEIFAC7"><i class="bi bi-github"></i> GitHub</a>
       </div>
     </div>
-    <div class="hero-photo">
-      <div class="ring"></div>
-      <img src="assets/img/huzeifa.jpg" alt="Portrait of Huzeifa Asif">
-      <div class="float f1"><i class="bi bi-chat-square-text"></i><div><b>57,215</b>chatbot battles modelled</div></div>
-      <div class="float f2"><i class="bi bi-broadcast"></i><div><b>Live</b>software in daily use</div></div>
+    <div class="hero-now" role="complementary" aria-label="Right now">
+      <span class="now-title"><i class="bi bi-lightning-charge"></i> Right now</span>
+      <ul>
+        <li><i class="bi bi-mortarboard"></i><div><b>MS Data Science</b>University of Central Punjab</div></li>
+        <li><i class="bi bi-journal-text"></i><div><b>Research paper</b>SA-DeBERTa · 57,215 chatbot battles</div></li>
+        <li><i class="bi bi-broadcast live"></i><div><b>Software in daily use</b>UAE and Pakistan</div></li>
+        <li><i class="bi bi-hdd-network amber"></i><div><b>In progress</b>Supply-chain risk with PySpark</div></li>
+      </ul>
     </div>
   </div>
 </section>
