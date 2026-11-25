@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="SA-DeBERTa: a style-aware transformer that predicts human preferences between chatbot responses on 57,215 Chatbot Arena battles.">
+
+<title>Which chatbot answer will people prefer? – Huzeifa Asif</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../assets/img/favicon.svg" rel="icon" type="image/svg+xml">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-29f00846dc0b6c361e78d357ae7c4662.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-4c16e6a7dd9201d93b95fe55a277f674.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-29f00846dc0b6c361e78d357ae7c4662.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-eb1c559c6b1d97ed39b2fc5fd63ee407.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-564090e7777734639322b3d5b8f09ed5.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-eb1c559c6b1d97ed39b2fc5fd63ee407.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+<script>
+window.PlotlyConfig = {MathJaxConfig: 'local'};
+if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}
+</script>
+<script type="module">import "https://cdn.plot.ly/plotly-4.1.1.min"</script>
+
+
+
+<meta property="og:title" content="Which chatbot answer will people prefer? – Huzeifa Asif">
+<meta property="og:description" content="SA-DeBERTa: a style-aware transformer that predicts human preferences between chatbot responses on 57,215 Chatbot Arena battles.">
+<meta property="og:image" content="https://huzeifac7.github.io/assets/figures/hci/Fig1_Proposed_Methodology.png">
+<meta property="og:site_name" content="Huzeifa Asif">
+<meta property="og:image:height" content="1250">
+<meta property="og:image:width" content="3250">
+</head>
+
+<body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const queryPrefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    const darkModeDefault = queryPrefersDark.matches;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    queryPrefersDark.addEventListener("change", e => {
+      if(window.localStorage.getItem("quarto-color-scheme") !== null)
+        return;
+      const alternate = e.matches
+      toggleColorMode(alternate);
+      localAlternateSentinel = e.matches ? 'alternate' : 'default'; // this is used alongside local storage!
+      toggleGiscusIfUsed(alternate, darkModeDefault);
+    });
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../assets/img/favicon.svg" alt="" class="navbar-logo light-content">
+    <img src="../assets/img/favicon.svg" alt="" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Huzeifa Asif</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../projects/hci-chatbot-preference.html" aria-current="page"> 
+<span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-machine-learning" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Machine learning</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-machine-learning">    
+        <li>
+    <a class="dropdown-item" href="../projects/ml-breast-cancer.html">
+ <span class="dropdown-text">Breast cancer diagnosis: DT vs RF vs KNN</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../projects/ml-id3-student-outcomes.html">
+ <span class="dropdown-text">Student outcomes: ID3 decision tree</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../projects/bigdata-supply-chain.html"> 
+<span class="menu-text">Big data</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../software.html"> 
+<span class="menu-text">Software</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/HUZEIFAC7"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/huzeifaasif"> <i class="bi bi-linkedin" role="img" aria-label="LinkedIn">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../assets/cv/Huzeifa_Asif_CV.pdf"> <i class="bi bi-download" role="img">
+</i> 
+<span class="menu-text">CV</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#the-problem" id="toc-the-problem" class="nav-link active" data-scroll-target="#the-problem">The problem</a></li>
+  <li><a href="#approach" id="toc-approach" class="nav-link" data-scroll-target="#approach">Approach</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
+  <li><a href="#what-drives-the-predictions" id="toc-what-drives-the-predictions" class="nav-link" data-scroll-target="#what-drives-the-predictions">What drives the predictions?</a></li>
+  <li><a href="#what-i-would-do-next" id="toc-what-i-would-do-next" class="nav-link" data-scroll-target="#what-i-would-do-next">What I would do next</a></li>
+  <li><a href="#reproducibility" id="toc-reproducibility" class="nav-link" data-scroll-target="#reproducibility">Reproducibility</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Which chatbot answer will people prefer?</h1>
+</div>
+
+<div>
+  <div class="description">
+    SA-DeBERTa: a style-aware transformer that predicts human preferences between chatbot responses on 57,215 Chatbot Arena battles.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="case-head">
+  <span class="badge-status research">Research paper · Advanced HCI</span>
+</div>
+<div class="actions">
+  <a class="btn-hz primary" href="../assets/papers/SA-DeBERTa_Chatbot_Preference_Paper.pdf"><i class="bi bi-file-earmark-pdf"></i> Read the paper (PDF)</a>
+  <a class="btn-hz" href="https://github.com/HUZEIFAC7/Advance_Human_Computer_Interaction"><i class="bi bi-github"></i> Code repository</a>
+  <a class="btn-hz" href="https://www.kaggle.com/competitions/lmsys-chatbot-arena/data"><i class="bi bi-database"></i> Dataset (Kaggle)</a>
+</div>
+<div class="glance">
+  <div><span>Question</span><p>Given a prompt and two chatbot answers, which one will a real user prefer, or is it a tie?</p></div>
+  <div><span>Data</span><p>57,215 head-to-head battles between 64 LLMs (LMSYS Chatbot Arena)</p></div>
+  <div><span>Model</span><p>DeBERTa-v3 cross-encoder fused with 16 interpretable style features</p></div>
+  <div><span>Stack</span><p>PyTorch · Hugging Face · LightGBM · SHAP · scikit-learn</p></div>
+  <div><span>Authors</span><p><b>Huzeifa Asif</b>, Kashif Bacha · MS Data Science, University of Central Punjab</p></div>
+</div>
+<div class="kpis">
+<div class="kpi hl">
+<p><strong>48.4%</strong> <span>test accuracy, calibrated ensemble (3 classes, chance = 33%)</span></p>
+</div>
+<div class="kpi">
+<p><strong>64.4%</strong> <span>accuracy on battles with a clear winner</span></p>
+</div>
+<div class="kpi">
+<p><strong>+3.7 pts</strong> <span>gained by adding style features, same encoder and same 1-epoch budget</span></p>
+</div>
+<div class="kpi">
+<p><strong>57,215</strong> <span>battles after cleaning, 64 different LLMs</span></p>
+</div>
+</div>
+<section id="the-problem" class="level2">
+<h2 class="anchored" data-anchor-id="the-problem">The problem</h2>
+<p>Millions of people now talk to LLM chatbots, but it is still hard to say <strong>which of two answers a person will prefer, and why</strong>. Human ratings are expensive, LLM-as-a-judge setups are known to favour longer or first-shown answers, and older user-satisfaction models were built for task-oriented dialogue, not open-ended answers.</p>
+<p>The Chatbot Arena offers a rare source of real preferences: a user writes a prompt, two anonymous models answer, and the user votes for <strong>A</strong>, <strong>B</strong> or a <strong>tie</strong>. This project turns 57,477 of those votes into a three-class prediction problem and asks a second, HCI question along the way: <em>how much does the presentation of an answer (its length, formatting, refusals) drive what people choose?</em></p>
+</section>
+<section id="approach" class="level2">
+<h2 class="anchored" data-anchor-id="approach">Approach</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../assets/figures/hci/Fig1_Proposed_Methodology.png" class="img-fluid figure-img" style="width:90.0%" alt="Methodology diagram: data cleaning, style features, SA-DeBERTa, baselines and evaluation"></p>
+<figcaption>The pipeline, from raw Arena battles to the calibrated ensemble.</figcaption>
+</figure>
+</div>
+<p><strong>Data preparation.</strong> JSON turns were parsed into text, 187 incomplete battles and 75 duplicates were removed, and the data was split 80/10/10 <strong>grouped by prompt</strong>, so a popular prompt can never appear in both training and test.</p>
+<p><strong>SA-DeBERTa, the proposed model.</strong> A DeBERTa-v3-base cross-encoder reads <code>[CLS] prompt [SEP] response A [SEP] response B</code> at once, so self-attention can compare the two answers directly. In parallel, a small MLP embeds <strong>16 style features</strong> (log length, word count, line breaks, headings, list items, code blocks and a refusal flag for each answer, plus their length differences). The two representations are concatenated and classified into A / B / tie.</p>
+<p><strong>Removing position bias.</strong> During training, each battle is shown with A and B swapped (and the label flipped) half of the time; at test time the model scores both orders and averages them. The prediction no longer depends on which answer was shown first.</p>
+<p><strong>Calibration.</strong> Temperature scaling and a weighted geometric-mean ensemble with the two classical baselines were fitted on the validation set only.</p>
+<div class="insight">
+<p><strong>Why style features?</strong> Inputs are truncated to 512 tokens, so the encoder cannot <em>see</em> how long a 1,000-word answer really is. In the data, the longer answer won <strong>61.6%</strong> of battles with a clear winner. The style branch passes that information explicitly, and keeps it interpretable.</p>
+</div>
+</section>
+<section id="results" class="level2">
+<h2 class="anchored" data-anchor-id="results">Results</h2>
+<p>All models were evaluated once, on the same <strong>5,738 held-out test battles</strong>. Use the buttons to switch metric; the proposed model is in indigo.</p>
+<div id="cell-fig-results" class="cell" data-execution_count="4">
+<div id="fig-results" class="cell-output cell-output-display quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div style="height:360px; width:100%;">            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-4.1.1.min.js" integrity="sha256-O24V1F27f8pb0glCkelh3cVHLNiHAJ5gCaVtq2aNch8=" crossorigin="anonymous"></script>                <div id="595a3c1a-fd9d-4f91-be19-d1590457547b" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("595a3c1a-fd9d-4f91-be19-d1590457547b")) {                    Plotly.newPlot(                        "595a3c1a-fd9d-4f91-be19-d1590457547b",                        [{"cliponaxis":false,"hovertemplate":"%{y}: %{x:.3f}\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":["#94A3B8","#94A3B8","#94A3B8","#94A3B8","#6366F1","#F5A524"]},"name":"Accuracy (%)","orientation":"h","text":["35.2%","46.8%","46.5%","43.2%","47.4%","48.4%"],"textposition":"outside","visible":true,"x":{"dtype":"f8","bdata":"EoPAyqGVQUBEi2zn+2lHQEJg5dAiO0dARIts5\u002fuZRUDJdr6fGq9HQIlBYOXQMkhA"},"y":["Majority class","TF-IDF + LR","LightGBM (style)","DeBERTa-v3 (text only)","SA-DeBERTa (proposed)","SA-DeBERTa-Ens"],"type":"bar"},{"cliponaxis":false,"hovertemplate":"%{y}: %{x:.3f}\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":["#94A3B8","#94A3B8","#94A3B8","#94A3B8","#6366F1","#F5A524"]},"name":"Macro F1 (%)","orientation":"h","text":["17.3%","45.8%","45.3%","42.9%","47.0%","47.3%"],"textposition":"outside","visible":false,"x":{"dtype":"f8","bdata":"f2q8dJNYMUDfT42XbuJGQI2XbhKDoEZAO99PjZduRUDHSzeJQYBHQNNNYhBYqUdA"},"y":["Majority class","TF-IDF + LR","LightGBM (style)","DeBERTa-v3 (text only)","SA-DeBERTa (proposed)","SA-DeBERTa-Ens"],"type":"bar"},{"cliponaxis":false,"hovertemplate":"%{y}: %{x:.3f}\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":["#94A3B8","#94A3B8","#94A3B8","#94A3B8","#6366F1","#F5A524"]},"name":"Log loss (lower is better)","orientation":"h","text":["1.097","1.036","1.038","1.075","1.033","1.017"],"textposition":"outside","visible":false,"x":{"dtype":"f8","bdata":"WmQ730+N8T\u002f6fmq8dJPwP8\u002f3U+Olm\u002fA\u002fMzMzMzMz8T+6SQwCK4fwPxKDwMqhRfA\u002f"},"y":["Majority class","TF-IDF + LR","LightGBM (style)","DeBERTa-v3 (text only)","SA-DeBERTa (proposed)","SA-DeBERTa-Ens"],"type":"bar"}],                        {"template":{"layout":{"colorway":["#6366F1","#F5A524","#14B8A6","#E11D48","#64748B"],"font":{"color":"#8A93A6","family":"Inter, system-ui, sans-serif","size":13},"hoverlabel":{"font":{"family":"Inter, sans-serif","size":12}},"legend":{"bgcolor":"rgba(0,0,0,0)","orientation":"h","x":0,"xanchor":"left","y":1.02,"yanchor":"bottom"},"margin":{"b":10,"l":10,"r":20,"t":40},"paper_bgcolor":"rgba(0,0,0,0)","plot_bgcolor":"rgba(0,0,0,0)","title":{"font":{"color":"#8A93A6","size":14},"x":0,"xanchor":"left"},"xaxis":{"automargin":true,"gridcolor":"rgba(138,147,166,0.18)","linecolor":"rgba(138,147,166,0.18)","title":{"standoff":8},"zerolinecolor":"rgba(138,147,166,0.18)"},"yaxis":{"automargin":true,"gridcolor":"rgba(138,147,166,0.18)","linecolor":"rgba(138,147,166,0.18)","title":{"standoff":8},"zerolinecolor":"rgba(138,147,166,0.18)"}}},"xaxis":{"title":{"text":"Accuracy (%)"},"range":[0,57.108459999999994]},"yaxis":{"autorange":"reversed"},"margin":{"t":60},"updatemenus":[{"bgcolor":"rgba(0,0,0,0)","bordercolor":"rgba(138,147,166,.4)","buttons":[{"args":[{"visible":[true,false,false]},{"xaxis.title.text":"Accuracy (%)","xaxis.range":[0,57.108459999999994],"shapes":[{"type":"line","x0":35.169,"x1":35.169,"y0":-0.5,"y1":5.5,"line":{"color":"#8A93A6","dash":"dot","width":1}}]}],"label":"Accuracy","method":"update"},{"args":[{"visible":[false,true,false]},{"xaxis.title.text":"Macro F1 (%)","xaxis.range":[0,55.841139999999996],"shapes":[{"type":"line","x0":17.346,"x1":17.346,"y0":-0.5,"y1":5.5,"line":{"color":"#8A93A6","dash":"dot","width":1}}]}],"label":"Macro F1","method":"update"},{"args":[{"visible":[false,false,true]},{"xaxis.title.text":"Log loss (lower is better)","xaxis.range":[1.0,1.12991],"shapes":[{"type":"line","x0":1.097,"x1":1.097,"y0":-0.5,"y1":5.5,"line":{"color":"#8A93A6","dash":"dot","width":1}}]}],"label":"Log loss","method":"update"}],"direction":"right","font":{"color":"#8A93A6"},"type":"buttons","x":0,"xanchor":"left","y":1.16}],"showlegend":false,"shapes":[{"line":{"color":"#8A93A6","dash":"dot","width":1},"type":"line","x0":35.169,"x1":35.169,"y0":-0.5,"y1":5.5}],"height":360},                        {"displayModeBar": false, "responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('595a3c1a-fd9d-4f91-be19-d1590457547b');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script>        </div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Test-set results of all models. Dashed line: the majority-class baseline.
+</figcaption>
+</figure>
+</div>
+</div>
+<table class="hz-table">
+<thead>
+<tr>
+<th>
+Model
+</th>
+<th class="num">
+Log loss ↓
+</th>
+<th class="num">
+Accuracy %
+</th>
+<th class="num">
+Macro F1 %
+</th>
+<th class="num">
+Swap consistency
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Majority class
+</td>
+<td class="num">
+1.097
+</td>
+<td class="num">
+35.17
+</td>
+<td class="num">
+17.35
+</td>
+<td class="num">
+100.0%
+</td>
+</tr>
+<tr>
+<td>
+TF-IDF + LR
+</td>
+<td class="num">
+1.036
+</td>
+<td class="num">
+46.83
+</td>
+<td class="num">
+45.77
+</td>
+<td class="num">
+99.8%
+</td>
+</tr>
+<tr>
+<td>
+LightGBM (style)
+</td>
+<td class="num">
+1.038
+</td>
+<td class="num">
+46.46
+</td>
+<td class="num">
+45.25
+</td>
+<td class="num">
+97.4%
+</td>
+</tr>
+<tr>
+<td>
+DeBERTa-v3 (text only)
+</td>
+<td class="num">
+1.075
+</td>
+<td class="num">
+43.20
+</td>
+<td class="num">
+42.86
+</td>
+<td class="num">
+59.7%
+</td>
+</tr>
+<tr>
+<td>
+SA-DeBERTa (proposed)
+</td>
+<td class="num">
+1.033
+</td>
+<td class="num">
+47.37
+</td>
+<td class="num">
+47.00
+</td>
+<td class="num">
+96.5%
+</td>
+</tr>
+<tr class="best">
+<td>
+SA-DeBERTa-Ens
+</td>
+<td class="num">
+1.017
+</td>
+<td class="num">
+48.40
+</td>
+<td class="num">
+47.32
+</td>
+<td class="num">
+–
+</td>
+</tr>
+</tbody>
+</table>
+<p>Three things stand out:</p>
+<ol type="1">
+<li><strong>SA-DeBERTa beats every single baseline</strong> on both log loss and accuracy, and the calibrated ensemble is best overall at <strong>48.4% accuracy</strong>, rising to <strong>64.4%</strong> when there is a clear winner.</li>
+<li><strong>Style is not a detail.</strong> With the same encoder and the same training budget, adding the style branch raised accuracy by <strong>3.7 points</strong> and swap consistency from <strong>59.7% to 95.9%</strong>: the text-only model often changed its mind when the answers were simply shown in the other order.</li>
+<li><strong>It was done on modest hardware.</strong> Everything, including the transformer, was trained on a single 6 GB laptop GPU, with mixed precision, gradient accumulation and checkpoint/resume runs.</li>
+</ol>
+<section id="learning-curves" class="level3">
+<h3 class="anchored" data-anchor-id="learning-curves">Learning curves</h3>
+<p>SA-DeBERTa was trained for two epochs in resumable runs with checkpoints every 150 steps (about 80 minutes per epoch on a 6 GB laptop GPU). The final checkpoint was chosen on validation log loss.</p>
+<div id="cell-fig-curves" class="cell" data-execution_count="6">
+<div id="fig-curves" class="cell-output cell-output-display quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-curves-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div style="height:360px; width:100%;">            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-4.1.1.min.js" integrity="sha256-O24V1F27f8pb0glCkelh3cVHLNiHAJ5gCaVtq2aNch8=" crossorigin="anonymous"></script>                <div id="41f4f40b-f2af-4447-bcbd-70545b542f70" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("41f4f40b-f2af-4447-bcbd-70545b542f70")) {                    Plotly.newPlot(                        "41f4f40b-f2af-4447-bcbd-70545b542f70",                        [{"hovertemplate":"epoch %{x:.2f}\u003cbr\u003eloss %{y:.4f}\u003cextra\u003eSA-DeBERTa\u003c\u002fextra\u003e","legendgroup":"SA-DeBERTa","line":{"color":"#6366F1","width":2.5},"marker":{"size":6},"mode":"lines+markers","name":"SA-DeBERTa","x":{"dtype":"f8","bdata":"AAAAAAAAwD8AAAAAAADQPwAAAAAAANg\u002fAAAAAAAA4D8AAAAAAADkPwAAAAAAAOg\u002fAAAAAAAA7D8AAAAAAADwPwAAAAAAAPI\u002fAAAAAAAA9D8AAAAAAAD2PwAAAAAAAPg\u002fAAAAAAAA+j8AAAAAAAD8PwAAAAAAAP4\u002fAAAAAAAAAEA="},"y":{"dtype":"f8","bdata":"AAAA4CY88T8AAACAmuTwPwAAAECU4PA\u002fAAAAQBjB8D8AAADAxL\u002fwPwAAAMD7qPA\u002fAAAAIAWh8D8AAAAgtZ3wPwAAAODEq\u002fA\u002fAAAAgMK68D8AAADA1prwPwAAAEBspPA\u002fAAAAICei8D8AAAAA5ZnwPwAAAMAel\u002fA\u002fAAAA4IOS8D8="},"type":"scatter","xaxis":"x","yaxis":"y"},{"hovertemplate":"epoch %{x:.2f}\u003cbr\u003eacc %{y:.1f}%\u003cextra\u003eSA-DeBERTa\u003c\u002fextra\u003e","legendgroup":"SA-DeBERTa","line":{"color":"#6366F1","width":2.5},"marker":{"size":6},"mode":"lines+markers","name":"SA-DeBERTa","showlegend":false,"x":{"dtype":"f8","bdata":"AAAAAAAAwD8AAAAAAADQPwAAAAAAANg\u002fAAAAAAAA4D8AAAAAAADkPwAAAAAAAOg\u002fAAAAAAAA7D8AAAAAAADwPwAAAAAAAPI\u002fAAAAAAAA9D8AAAAAAAD2PwAAAAAAAPg\u002fAAAAAAAA+j8AAAAAAAD8PwAAAAAAAP4\u002fAAAAAAAAAEA="},"y":{"dtype":"f8","bdata":"ZmZmZmbmRUDv7u7u7u5GQCIiIiIiIkZAAAAAAAAAR0B3d3d3d\u002fdGQGdmZmZmZkdA3t3d3d1dR0BERERERERHQN7d3d3dXUdAzMzMzMzMR0B3d3d3d3dHQImIiIiIiEdAq6qqqqqqR0DMzMzMzMxHQCIiIiIiokdAERERERGRR0A="},"type":"scatter","xaxis":"x2","yaxis":"y2"},{"hovertemplate":"epoch %{x:.2f}\u003cbr\u003eloss %{y:.4f}\u003cextra\u003eDeBERTa-v3 text only\u003c\u002fextra\u003e","legendgroup":"DeBERTa-v3 text only","line":{"color":"#64748B","width":2.5},"marker":{"size":6},"mode":"lines+markers","name":"DeBERTa-v3 text only","x":{"dtype":"f8","bdata":"AAAAAAAAwD8AAAAAAADQPwAAAAAAANg\u002fAAAAAAAA4D8AAAAAAADkPwAAAAAAAOg\u002fAAAAAAAA7D8AAAAAAADwPw=="},"y":{"dtype":"f8","bdata":"AAAA4OiA8T8AAACAjUvxPwAAACDMVvE\u002fAAAAwK5I8T8AAACgWTfxPwAAACC5LPE\u002fAAAAgBst8T8AAAAAUiHxPw=="},"type":"scatter","xaxis":"x","yaxis":"y"},{"hovertemplate":"epoch %{x:.2f}\u003cbr\u003eacc %{y:.1f}%\u003cextra\u003eDeBERTa-v3 text only\u003c\u002fextra\u003e","legendgroup":"DeBERTa-v3 text only","line":{"color":"#64748B","width":2.5},"marker":{"size":6},"mode":"lines+markers","name":"DeBERTa-v3 text only","showlegend":false,"x":{"dtype":"f8","bdata":"AAAAAAAAwD8AAAAAAADQPwAAAAAAANg\u002fAAAAAAAA4D8AAAAAAADkPwAAAAAAAOg\u002fAAAAAAAA7D8AAAAAAADwPw=="},"y":{"dtype":"f8","bdata":"q6qqqqoqQ0Dv7u7u7u5DQHh3d3d390JAZmZmZmbmQkBnZmZmZmZDQFVVVVVVVURAzczMzMxMQ0C8u7u7u7tEQA=="},"type":"scatter","xaxis":"x2","yaxis":"y2"}],                        {"template":{"layout":{"colorway":["#6366F1","#F5A524","#14B8A6","#E11D48","#64748B"],"font":{"color":"#8A93A6","family":"Inter, system-ui, sans-serif","size":13},"hoverlabel":{"font":{"family":"Inter, sans-serif","size":12}},"legend":{"bgcolor":"rgba(0,0,0,0)","orientation":"h","x":0,"xanchor":"left","y":1.02,"yanchor":"bottom"},"margin":{"b":10,"l":10,"r":20,"t":40},"paper_bgcolor":"rgba(0,0,0,0)","plot_bgcolor":"rgba(0,0,0,0)","title":{"font":{"color":"#8A93A6","size":14},"x":0,"xanchor":"left"},"xaxis":{"automargin":true,"gridcolor":"rgba(138,147,166,0.18)","linecolor":"rgba(138,147,166,0.18)","title":{"standoff":8},"zerolinecolor":"rgba(138,147,166,0.18)"},"yaxis":{"automargin":true,"gridcolor":"rgba(138,147,166,0.18)","linecolor":"rgba(138,147,166,0.18)","title":{"standoff":8},"zerolinecolor":"rgba(138,147,166,0.18)"}}},"xaxis":{"anchor":"y","domain":[0.0,0.45],"title":{"text":"epoch"}},"yaxis":{"anchor":"x","domain":[0.0,1.0]},"xaxis2":{"anchor":"y2","domain":[0.55,1.0],"title":{"text":"epoch"}},"yaxis2":{"anchor":"x2","domain":[0.0,1.0]},"annotations":[{"font":{"size":13,"color":"#8A93A6"},"showarrow":false,"text":"Validation log loss \u2193","x":0.225,"xanchor":"center","xref":"paper","y":1.0,"yanchor":"bottom","yref":"paper"},{"font":{"size":13,"color":"#8A93A6"},"showarrow":false,"text":"Validation accuracy \u2191","x":0.775,"xanchor":"center","xref":"paper","y":1.0,"yanchor":"bottom","yref":"paper"}],"margin":{"t":70},"legend":{"y":1.14},"height":360},                        {"displayModeBar": false, "responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('41f4f40b-f2af-4447-bcbd-70545b542f70');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script>        </div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-curves-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Validation log loss and accuracy during training (1,500-battle validation subset).
+</figcaption>
+</figure>
+</div>
+</div>
+</section>
+</section>
+<section id="what-drives-the-predictions" class="level2">
+<h2 class="anchored" data-anchor-id="what-drives-the-predictions">What drives the predictions?</h2>
+<section id="length-dominates" class="level3">
+<h3 class="anchored" data-anchor-id="length-dominates">Length dominates</h3>
+<p>SHAP values for the LightGBM style model show which presentation features move the predicted preference most. <strong>Length differences come first</strong>, then the length and structure of each answer, then refusals. Headings barely matter.</p>
+<div id="cell-fig-shap" class="cell" data-execution_count="7">
+<div id="fig-shap" class="cell-output cell-output-display quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-shap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div style="height:470px; width:100%;">            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-4.1.1.min.js" integrity="sha256-O24V1F27f8pb0glCkelh3cVHLNiHAJ5gCaVtq2aNch8=" crossorigin="anonymous"></script>                <div id="c08c679e-b033-4d14-96d0-da3f7badcce3" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("c08c679e-b033-4d14-96d0-da3f7badcce3")) {                    Plotly.newPlot(                        "c08c679e-b033-4d14-96d0-da3f7badcce3",                        [{"hovertemplate":"%{y}: %{x:.4f}\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":["#94A3B8","#94A3B8","#94A3B8","#94A3B8","#94A3B8","#94A3B8","#6366F1","#6366F1","#F5A524","#F5A524","#6366F1","#94A3B8","#94A3B8","#6366F1","#6366F1","#6366F1"]},"orientation":"h","x":{"dtype":"f8","bdata":"b9Of\u002fUgRWT9fB84ZUdpbPyi4WFGDaYg\u002f2UKQgxJmij92cRsN4C2QPwQcQpWaPZA\u002fcQM+P4wQnj8vqG+Z02WhP5hMFYxK6qQ\u002fb\u002fWc9L7xpT9gWWlSCrqtP8lxp3Sw\u002fq8\u002fAOMZNPRPsD8NN+DzwwixP1NcVfZdEbQ\u002f4jsx68VQtj8="},"y":["Headings in B","Headings in A","List items in A","List items in B","Code blocks in A","Code blocks in B","Words in B","Words in A","Refusal in A","Refusal in B","Length of B","Line breaks in B","Line breaks in A","Length of A","Word-count difference","Length difference (A \u2212 B)"],"type":"bar"},{"marker":{"color":"#6366F1","size":10,"symbol":"square"},"mode":"markers","name":"Length","x":[null],"y":[null],"type":"scatter"},{"marker":{"color":"#F5A524","size":10,"symbol":"square"},"mode":"markers","name":"Refusal","x":[null],"y":[null],"type":"scatter"},{"marker":{"color":"#94A3B8","size":10,"symbol":"square"},"mode":"markers","name":"Formatting","x":[null],"y":[null],"type":"scatter"}],                        {"template":{"layout":{"colorway":["#6366F1","#F5A524","#14B8A6","#E11D48","#64748B"],"font":{"color":"#8A93A6","family":"Inter, system-ui, sans-serif","size":13},"hoverlabel":{"font":{"family":"Inter, sans-serif","size":12}},"legend":{"bgcolor":"rgba(0,0,0,0)","orientation":"h","x":0,"xanchor":"left","y":1.02,"yanchor":"bottom"},"margin":{"b":10,"l":10,"r":20,"t":40},"paper_bgcolor":"rgba(0,0,0,0)","plot_bgcolor":"rgba(0,0,0,0)","title":{"font":{"color":"#8A93A6","size":14},"x":0,"xanchor":"left"},"xaxis":{"automargin":true,"gridcolor":"rgba(138,147,166,0.18)","linecolor":"rgba(138,147,166,0.18)","title":{"standoff":8},"zerolinecolor":"rgba(138,147,166,0.18)"},"yaxis":{"automargin":true,"gridcolor":"rgba(138,147,166,0.18)","linecolor":"rgba(138,147,166,0.18)","title":{"standoff":8},"zerolinecolor":"rgba(138,147,166,0.18)"}}},"margin":{"t":50},"xaxis":{"title":{"text":"mean |SHAP value|"}},"height":470},                        {"displayModeBar": false, "responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('c08c679e-b033-4d14-96d0-da3f7badcce3');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script>        </div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-shap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Mean absolute SHAP value per style feature (LightGBM, test set).
+</figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section id="a-model-that-learned-the-users-bias-and-then-some" class="level3">
+<h3 class="anchored" data-anchor-id="a-model-that-learned-the-users-bias-and-then-some">A model that learned the users’ bias, and then some</h3>
+<div class="insight">
+<p><strong>An honest caveat.</strong> Users picked the longer answer in <strong>61.6%</strong> of battles with a winner. When SA-DeBERTa predicts a winner, it picks the longer one <strong>93.2%</strong> of the time, against <strong>63.9%</strong> for the text-only model. The style branch helps accuracy precisely because it amplifies the length signal. That is a useful finding for interface designers (presentation shapes judgement), and a warning for anyone who would use such a model as a quality judge.</p>
+</div>
+</section>
+<section id="where-the-model-succeeds-and-fails" class="level3">
+<h3 class="anchored" data-anchor-id="where-the-model-succeeds-and-fails">Where the model succeeds and fails</h3>
+<div id="cell-fig-errors" class="cell" data-execution_count="9">
+<div id="fig-errors" class="cell-output cell-output-display quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-errors-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div style="height:520px; width:100%;">            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-4.1.1.min.js" integrity="sha256-O24V1F27f8pb0glCkelh3cVHLNiHAJ5gCaVtq2aNch8=" crossorigin="anonymous"></script>                <div id="ddfe0486-b3ca-4c2f-86ed-e2b39220d270" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("ddfe0486-b3ca-4c2f-86ed-e2b39220d270")) {                    Plotly.newPlot(                        "ddfe0486-b3ca-4c2f-86ed-e2b39220d270",                        [{"hovertemplate":"%{y}\u003cbr\u003e%{x:.1f}%\u003cextra\u003eDeBERTa-v3 text only\u003c\u002fextra\u003e","marker":{"color":"#94A3B8"},"name":"DeBERTa-v3 text only","orientation":"h","x":[43.2,43.919999999999995,38.43,38.48,48.57,39.23,35.79,52.26],"y":["All battles (5,738)","Single-turn (4,986)","Multi-turn (752)","Similar lengths (1,601)","One answer 2\u00d7 longer (2,026)","Long pair (\u003e600 words) (1,277)","Contains code (623)","Contains a refusal (664)"],"type":"bar"},{"hovertemplate":"%{y}\u003cbr\u003e%{x:.1f}%\u003cextra\u003eSA-DeBERTa\u003c\u002fextra\u003e","marker":{"color":"#6366F1"},"name":"SA-DeBERTa","orientation":"h","x":[47.370000000000005,47.97,43.35,41.97,53.31,47.38,41.730000000000004,59.489999999999995],"y":["All battles (5,738)","Single-turn (4,986)","Multi-turn (752)","Similar lengths (1,601)","One answer 2\u00d7 longer (2,026)","Long pair (\u003e600 words) (1,277)","Contains code (623)","Contains a refusal (664)"],"type":"bar"},{"hovertemplate":"%{y}\u003cbr\u003e%{x:.1f}%\u003cextra\u003eSA-DeBERTa-Ens\u003c\u002fextra\u003e","marker":{"color":"#F5A524"},"name":"SA-DeBERTa-Ens","orientation":"h","x":[48.4,48.78,45.879999999999995,42.66,54.44,47.92,43.34,62.8],"y":["All battles (5,738)","Single-turn (4,986)","Multi-turn (752)","Similar lengths (1,601)","One answer 2\u00d7 longer (2,026)","Long pair (\u003e600 words) (1,277)","Contains code (623)","Contains a refusal (664)"],"type":"bar"}],                        {"template":{"layout":{"colorway":["#6366F1","#F5A524","#14B8A6","#E11D48","#64748B"],"font":{"color":"#8A93A6","family":"Inter, system-ui, sans-serif","size":13},"hoverlabel":{"font":{"family":"Inter, sans-serif","size":12}},"legend":{"bgcolor":"rgba(0,0,0,0)","orientation":"h","x":0,"xanchor":"left","y":1.02,"yanchor":"bottom"},"margin":{"b":10,"l":10,"r":20,"t":40},"paper_bgcolor":"rgba(0,0,0,0)","plot_bgcolor":"rgba(0,0,0,0)","title":{"font":{"color":"#8A93A6","size":14},"x":0,"xanchor":"left"},"xaxis":{"automargin":true,"gridcolor":"rgba(138,147,166,0.18)","linecolor":"rgba(138,147,166,0.18)","title":{"standoff":8},"zerolinecolor":"rgba(138,147,166,0.18)"},"yaxis":{"automargin":true,"gridcolor":"rgba(138,147,166,0.18)","linecolor":"rgba(138,147,166,0.18)","title":{"standoff":8},"zerolinecolor":"rgba(138,147,166,0.18)"}}},"xaxis":{"title":{"text":"accuracy (%)"},"range":[30,66]},"yaxis":{"autorange":"reversed"},"margin":{"t":50},"barmode":"group","bargap":0.25,"height":520},                        {"displayModeBar": false, "responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('ddfe0486-b3ca-4c2f-86ed-e2b39220d270');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script>        </div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-errors-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Test accuracy by subgroup. Numbers in brackets: battles in the subgroup.
+</figcaption>
+</figure>
+</div>
+</div>
+<p>The pattern is consistent across models: accuracy is <strong>highest when one answer is much longer or contains a refusal</strong> (an easy cue) and <strong>lowest when both answers look alike</strong> or contain code, where judging quality really needs understanding the content.</p>
+<div id="cell-fig-confusion" class="cell" data-execution_count="10">
+<div id="fig-confusion" class="cell-output cell-output-display quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-confusion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div style="height:380px; width:100%;">            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-4.1.1.min.js" integrity="sha256-O24V1F27f8pb0glCkelh3cVHLNiHAJ5gCaVtq2aNch8=" crossorigin="anonymous"></script>                <div id="7bb248ad-eff8-4381-afc6-f7616b1a0ea2" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("7bb248ad-eff8-4381-afc6-f7616b1a0ea2")) {                    Plotly.newPlot(                        "7bb248ad-eff8-4381-afc6-f7616b1a0ea2",                        [{"colorscale":[[0,"rgba(99,102,241,0.06)"],[1,"#6366F1"]],"hovertemplate":"true %{y}, predicted %{x}: %{z:.1f}%\u003cextra\u003e\u003c\u002fextra\u003e","showscale":false,"text":[["57%\u003cbr\u003e\u003cspan style='font-size:11px'\u003e1,151\u003c\u002fspan\u003e","28%\u003cbr\u003e\u003cspan style='font-size:11px'\u003e563\u003c\u002fspan\u003e","15%\u003cbr\u003e\u003cspan style='font-size:11px'\u003e304\u003c\u002fspan\u003e"],["30%\u003cbr\u003e\u003cspan style='font-size:11px'\u003e582\u003c\u002fspan\u003e","54%\u003cbr\u003e\u003cspan style='font-size:11px'\u003e1,065\u003c\u002fspan\u003e","16%\u003cbr\u003e\u003cspan style='font-size:11px'\u003e319\u003c\u002fspan\u003e"],["35%\u003cbr\u003e\u003cspan style='font-size:11px'\u003e617\u003c\u002fspan\u003e","33%\u003cbr\u003e\u003cspan style='font-size:11px'\u003e576\u003c\u002fspan\u003e","32%\u003cbr\u003e\u003cspan style='font-size:11px'\u003e561\u003c\u002fspan\u003e"]],"texttemplate":"%{text}","x":["A preferred","B preferred","Tie"],"xgap":3,"y":["A preferred","B preferred","Tie"],"ygap":3,"z":{"dtype":"f8","bdata":"toUBmrGETEBQSBP0HuY7QIxY06\u002f7IC5Aatgn8W6aPUDl8FU64BVLQMxFLJrQOTBAOEA0YZ+WQUDPrHC2a2tAQPMlttDp+z9A","shape":"3, 3"},"type":"heatmap"}],                        {"template":{"layout":{"colorway":["#6366F1","#F5A524","#14B8A6","#E11D48","#64748B"],"font":{"color":"#8A93A6","family":"Inter, system-ui, sans-serif","size":13},"hoverlabel":{"font":{"family":"Inter, sans-serif","size":12}},"legend":{"bgcolor":"rgba(0,0,0,0)","orientation":"h","x":0,"xanchor":"left","y":1.02,"yanchor":"bottom"},"margin":{"b":10,"l":10,"r":20,"t":40},"paper_bgcolor":"rgba(0,0,0,0)","plot_bgcolor":"rgba(0,0,0,0)","title":{"font":{"color":"#8A93A6","size":14},"x":0,"xanchor":"left"},"xaxis":{"automargin":true,"gridcolor":"rgba(138,147,166,0.18)","linecolor":"rgba(138,147,166,0.18)","title":{"standoff":8},"zerolinecolor":"rgba(138,147,166,0.18)"},"yaxis":{"automargin":true,"gridcolor":"rgba(138,147,166,0.18)","linecolor":"rgba(138,147,166,0.18)","title":{"standoff":8},"zerolinecolor":"rgba(138,147,166,0.18)"}}},"xaxis":{"title":{"text":"predicted"},"side":"bottom","showgrid":false},"yaxis":{"title":{"text":"true"},"autorange":"reversed","showgrid":false},"margin":{"t":20},"height":380},                        {"displayModeBar": false, "responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('7bb248ad-eff8-4381-afc6-f7616b1a0ea2');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script>        </div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-confusion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Confusion matrix of the calibrated ensemble, normalised by true class (row %).
+</figcaption>
+</figure>
+</div>
+</div>
+<p>Ties are recalled only <strong>32%</strong> of the time: a single vote of “tie” can mean <em>both good</em> or <em>both bad</em>, which look nothing alike.</p>
+</section>
+</section>
+<section id="what-i-would-do-next" class="level2">
+<h2 class="anchored" data-anchor-id="what-i-would-do-next">What I would do next</h2>
+<ul>
+<li><strong>Model ties explicitly</strong>, for example as separate “both good” and “both bad” outcomes.</li>
+<li><strong>Longer context and larger open models</strong> on the full Arena data, to see past the 512-token window.</li>
+<li><strong>A controlled user study</strong> that varies only the length and formatting of the <em>same</em> answer, to separate the causal effect of style from that of content.</li>
+</ul>
+</section>
+<section id="reproducibility" class="level2">
+<h2 class="anchored" data-anchor-id="reproducibility">Reproducibility</h2>
+<p>The full pipeline (preprocessing, baselines, resumable SA-DeBERTa training, calibration, error analysis and figures) is in the <a href="https://github.com/HUZEIFAC7/Advance_Human_Computer_Interaction">code repository</a>, with a README giving the exact commands. Random seed 42; PyTorch 2.6, Transformers 4.46, scikit-learn 1.9, LightGBM 4.7, SHAP 0.54. Every chart on this page is drawn at build time from the result files that pipeline produced.</p>
+<div class="chips lg">
+<p><span>PyTorch</span> <span>Hugging Face Transformers</span> <span>DeBERTa-v3</span> <span>LightGBM</span> <span>SHAP</span> <span>scikit-learn</span> <span>TF-IDF</span> <span>Temperature scaling</span> <span>Mixed precision</span></p>
+</div>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/huzeifac7\.github\.io");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2026 Huzeifa Asif · Lahore, Pakistan</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Built with <a href="https://quarto.org">Quarto</a> and Python · every chart is computed from the project’s own results</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

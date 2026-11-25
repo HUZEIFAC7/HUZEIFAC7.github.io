@@ -1,0 +1,296 @@
+[
+  {
+    "objectID": "projects/ml-id3-student-outcomes.html",
+    "href": "projects/ml-id3-student-outcomes.html",
+    "title": "Who will fail the final exam? An ID3 decision tree, by hand and in code",
+    "section": "",
+    "text": "Machine learning · MS Data Science"
+  },
+  {
+    "objectID": "projects/ml-id3-student-outcomes.html#the-data",
+    "href": "projects/ml-id3-student-outcomes.html#the-data",
+    "title": "Who will fail the final exam? An ID3 decision tree, by hand and in code",
+    "section": "The data",
+    "text": "The data\nA university wants to flag students likely to fail their final exam while there is still time to help. Twenty historical records describe four habits and the result:\n\n\n\n\nID\n\n\nAttendance\n\n\nStudy Hours\n\n\nAssignment\n\n\nPrevious Grade\n\n\nResult\n\n\n\n\n\n\nS01\n\n\nHigh\n\n\nHigh\n\n\nYes\n\n\nGood\n\n\nPass\n\n\n\n\nS02\n\n\nHigh\n\n\nMedium\n\n\nYes\n\n\nGood\n\n\nPass\n\n\n\n\nS03\n\n\nLow\n\n\nLow\n\n\nNo\n\n\nPoor\n\n\nFail\n\n\n\n\nS04\n\n\nMedium\n\n\nHigh\n\n\nYes\n\n\nGood\n\n\nPass\n\n\n\n\nS05\n\n\nLow\n\n\nMedium\n\n\nNo\n\n\nPoor\n\n\nFail\n\n\n\n\nS06\n\n\nHigh\n\n\nLow\n\n\nYes\n\n\nPoor\n\n\nPass\n\n\n\n\nS07\n\n\nMedium\n\n\nMedium\n\n\nYes\n\n\nGood\n\n\nPass\n\n\n\n\nS08\n\n\nLow\n\n\nHigh\n\n\nYes\n\n\nGood\n\n\nPass\n\n\n\n\nS09\n\n\nMedium\n\n\nLow\n\n\nNo\n\n\nPoor\n\n\nFail\n\n\n\n\nS10\n\n\nHigh\n\n\nHigh\n\n\nNo\n\n\nGood\n\n\nPass\n\n\n\n\nS11\n\n\nLow\n\n\nLow\n\n\nYes\n\n\nPoor\n\n\nFail\n\n\n\n\nS12\n\n\nMedium\n\n\nHigh\n\n\nNo\n\n\nGood\n\n\nPass\n\n\n\n\nS13\n\n\nHigh\n\n\nMedium\n\n\nNo\n\n\nPoor\n\n\nFail\n\n\n\n\nS14\n\n\nMedium\n\n\nMedium\n\n\nNo\n\n\nPoor\n\n\nFail\n\n\n\n\nS15\n\n\nLow\n\n\nMedium\n\n\nYes\n\n\nGood\n\n\nPass\n\n\n\n\nS16\n\n\nHigh\n\n\nLow\n\n\nNo\n\n\nPoor\n\n\nFail\n\n\n\n\nS17\n\n\nMedium\n\n\nLow\n\n\nYes\n\n\nGood\n\n\nPass\n\n\n\n\nS18\n\n\nLow\n\n\nHigh\n\n\nNo\n\n\nPoor\n\n\nFail\n\n\n\n\nS19\n\n\nHigh\n\n\nHigh\n\n\nYes\n\n\nPoor\n\n\nPass\n\n\n\n\nS20\n\n\nMedium\n\n\nHigh\n\n\nYes\n\n\nPoor\n\n\nPass\n\n\n\n\nWith 12 passes and 8 fails, the starting entropy is\n\\[H(S) = -\\left[0.6\\log_2 0.6 + 0.4\\log_2 0.4\\right] = 0.9710 \\text{ bits},\\]\nclose to the 1-bit maximum: knowing nothing else, we are very unsure about any student."
+  },
+  {
+    "objectID": "projects/ml-id3-student-outcomes.html#choosing-the-root-hand-versus-code",
+    "href": "projects/ml-id3-student-outcomes.html#choosing-the-root-hand-versus-code",
+    "title": "Who will fail the final exam? An ID3 decision tree, by hand and in code",
+    "section": "Choosing the root: hand versus code",
+    "text": "Choosing the root: hand versus code\nID3 picks the attribute whose split removes the most uncertainty, \\(IG(S, A) = H(S) - \\sum_v \\frac{|S_v|}{|S|} H(S_v)\\). The values in the report were derived by hand with five-decimal logarithms; the code recomputes them exactly.\n\n\n\n\n                            \n                                            \n\n\nFigure 1: Information gain of each attribute at the root. Previous Grade wins and removes 52% of the uncertainty.\n\n\n\n\n\n\n\n\nNode\n\n\nAttribute\n\n\nBy hand\n\n\nComputed\n\n\n\n\n\n\n\n\nRoot\n\n\nPrevious Grade\n\n\n0.5060\n\n\n0.5060\n\n\n✓ match\n\n\n\n\nRoot\n\n\nAssignment\n\n\n0.3853\n\n\n0.3853\n\n\n✓ match\n\n\n\n\nRoot\n\n\nStudy Hours\n\n\n0.1780\n\n\n0.1780\n\n\n✓ match\n\n\n\n\nRoot\n\n\nAttendance\n\n\n0.0913\n\n\n0.0913\n\n\n✓ match\n\n\n\n\nGrade = Poor\n\n\nAssignment\n\n\n0.5503\n\n\n0.5503\n\n\n✓ match\n\n\n\n\nGrade = Poor\n\n\nStudy Hours\n\n\n0.2668\n\n\n0.2668\n\n\n✓ match\n\n\n\n\nGrade = Poor\n\n\nAttendance\n\n\n0.2313\n\n\n0.2313\n\n\n✓ match\n\n\n\n\nPoor, Assignment = Yes\n\n\nAttendance\n\n\n0.8113\n\n\n0.8113\n\n\n✓ match\n\n\n\n\nPoor, Assignment = Yes\n\n\nStudy Hours\n\n\n0.3113\n\n\n0.3113\n\n\n✓ match\n\n\n\n\n9 of 9 hand-computed information gains match the code to four decimals."
+  },
+  {
+    "objectID": "projects/ml-id3-student-outcomes.html#the-tree",
+    "href": "projects/ml-id3-student-outcomes.html#the-tree",
+    "title": "Who will fail the final exam? An ID3 decision tree, by hand and in code",
+    "section": "The tree",
+    "text": "The tree\nThe recursion stops whenever a branch is pure. Every branch here ends pure, so none of the tie-breaking rules was ever needed, and Study Hours never appears.\n\n\n\n\n\nflowchart TD\n  R{{\"Previous Grade&lt;br/&gt;20 students\"}} --&gt;|Good| P1([\"PASS · 9/9\"])\n  R --&gt;|Poor| A{{\"Assignment&lt;br/&gt;11 students\"}}\n  A --&gt;|No| F1([\"FAIL · 7/7\"])\n  A --&gt;|Yes| T{{\"Attendance&lt;br/&gt;4 students\"}}\n  T --&gt;|High| P2([\"PASS · 2/2\"])\n  T --&gt;|Medium| P3([\"PASS · 1/1\"])\n  T --&gt;|Low| F2([\"FAIL · 1/1\"])\n  classDef pass fill:#DCFCE7,stroke:#16A34A,color:#14532D;\n  classDef fail fill:#FFE4E6,stroke:#E11D48,color:#881337;\n  classDef node fill:#E0E7FF,stroke:#6366F1,color:#1E1B4B;\n  class P1,P2,P3 pass; class F1,F2 fail; class R,A,T node;\n\n\n The final ID3 tree. Counts are training students reaching each node. \n\n\n\nThe code produces the same tree, read as rules:\n\nIF Previous Grade = Good THEN Pass\nIF Previous Grade = Poor AND Assignment = No THEN Fail\nIF Previous Grade = Poor AND Assignment = Yes AND Attendance = High THEN Pass\nIF Previous Grade = Poor AND Assignment = Yes AND Attendance = Low THEN Fail\nIF Previous Grade = Poor AND Assignment = Yes AND Attendance = Medium THEN Pass"
+  },
+  {
+    "objectID": "projects/ml-id3-student-outcomes.html#try-it-predict-a-student",
+    "href": "projects/ml-id3-student-outcomes.html#try-it-predict-a-student",
+    "title": "Who will fail the final exam? An ID3 decision tree, by hand and in code",
+    "section": "Try it: predict a student",
+    "text": "Try it: predict a student\nPick a profile and follow the path through the tree. Students who land on a Fail leaf would be flagged for tutoring, attendance follow-up and assignment reminders.\n\n  \n    AttendanceHighMediumLow\n    Study hoursHighMediumLow\n    Assignment submittedYesNo\n    Previous gradeGoodPoor"
+  },
+  {
+    "objectID": "projects/ml-id3-student-outcomes.html#five-new-students",
+    "href": "projects/ml-id3-student-outcomes.html#five-new-students",
+    "title": "Who will fail the final exam? An ID3 decision tree, by hand and in code",
+    "section": "Five new students",
+    "text": "Five new students\n\n\n\n\nStudent\n\n\nAttendance\n\n\nStudy Hours\n\n\nAssignment\n\n\nPrevious Grade\n\n\nPrediction\n\n\nReport\n\n\n\n\n\n\nA\n\n\nHigh\n\n\nMedium\n\n\nYes\n\n\nGood\n\n\nPass\n\n\nPass\n\n\n\n\nB\n\n\nLow\n\n\nLow\n\n\nNo\n\n\nPoor\n\n\nFail\n\n\nFail\n\n\n\n\nC\n\n\nMedium\n\n\nHigh\n\n\nYes\n\n\nPoor\n\n\nPass\n\n\nPass\n\n\n\n\nD\n\n\nHigh\n\n\nLow\n\n\nNo\n\n\nGood\n\n\nPass\n\n\nPass\n\n\n\n\nE\n\n\nLow\n\n\nMedium\n\n\nYes\n\n\nPoor\n\n\nFail\n\n\nFail\n\n\n\n\nStudents B and E would be flagged. Student D is the cautionary tale: a good previous grade sends them straight to Pass, even with low study hours and no assignment, simply because the training data contains no counter-example."
+  },
+  {
+    "objectID": "projects/ml-id3-student-outcomes.html#what-a-20-row-tree-can-and-cannot-tell-you",
+    "href": "projects/ml-id3-student-outcomes.html#what-a-20-row-tree-can-and-cannot-tell-you",
+    "title": "Who will fail the final exam? An ID3 decision tree, by hand and in code",
+    "section": "What a 20-row tree can and cannot tell you",
+    "text": "What a 20-row tree can and cannot tell you\n\nIt fits the training data perfectly (100%), but two leaves rest on one student each. Without held-out data, its real accuracy is unknown.\nGreedy splitting can miss useful combinations; study hours never get a say.\nInformation gain favours many-valued attributes, and ID3 cannot handle continuous values or missing data without help.\nNext steps: more cohorts and cross-validation, C4.5 or CART with pruning, numeric features (attendance %, weekly hours), Fail-class recall as the target metric, and a fairness check before any decision about real students.\n\n\nEntropy Information gain ID3 from scratch pandas Interpretable ML"
+  },
+  {
+    "objectID": "projects/hci-chatbot-preference.html",
+    "href": "projects/hci-chatbot-preference.html",
+    "title": "Which chatbot answer will people prefer?",
+    "section": "",
+    "text": "Research paper · Advanced HCI"
+  },
+  {
+    "objectID": "projects/hci-chatbot-preference.html#the-problem",
+    "href": "projects/hci-chatbot-preference.html#the-problem",
+    "title": "Which chatbot answer will people prefer?",
+    "section": "The problem",
+    "text": "The problem\nMillions of people now talk to LLM chatbots, but it is still hard to say which of two answers a person will prefer, and why. Human ratings are expensive, LLM-as-a-judge setups are known to favour longer or first-shown answers, and older user-satisfaction models were built for task-oriented dialogue, not open-ended answers.\nThe Chatbot Arena offers a rare source of real preferences: a user writes a prompt, two anonymous models answer, and the user votes for A, B or a tie. This project turns 57,477 of those votes into a three-class prediction problem and asks a second, HCI question along the way: how much does the presentation of an answer (its length, formatting, refusals) drive what people choose?"
+  },
+  {
+    "objectID": "projects/hci-chatbot-preference.html#approach",
+    "href": "projects/hci-chatbot-preference.html#approach",
+    "title": "Which chatbot answer will people prefer?",
+    "section": "Approach",
+    "text": "Approach\n\n\n\nThe pipeline, from raw Arena battles to the calibrated ensemble.\n\n\nData preparation. JSON turns were parsed into text, 187 incomplete battles and 75 duplicates were removed, and the data was split 80/10/10 grouped by prompt, so a popular prompt can never appear in both training and test.\nSA-DeBERTa, the proposed model. A DeBERTa-v3-base cross-encoder reads [CLS] prompt [SEP] response A [SEP] response B at once, so self-attention can compare the two answers directly. In parallel, a small MLP embeds 16 style features (log length, word count, line breaks, headings, list items, code blocks and a refusal flag for each answer, plus their length differences). The two representations are concatenated and classified into A / B / tie.\nRemoving position bias. During training, each battle is shown with A and B swapped (and the label flipped) half of the time; at test time the model scores both orders and averages them. The prediction no longer depends on which answer was shown first.\nCalibration. Temperature scaling and a weighted geometric-mean ensemble with the two classical baselines were fitted on the validation set only.\n\nWhy style features? Inputs are truncated to 512 tokens, so the encoder cannot see how long a 1,000-word answer really is. In the data, the longer answer won 61.6% of battles with a clear winner. The style branch passes that information explicitly, and keeps it interpretable."
+  },
+  {
+    "objectID": "projects/hci-chatbot-preference.html#results",
+    "href": "projects/hci-chatbot-preference.html#results",
+    "title": "Which chatbot answer will people prefer?",
+    "section": "Results",
+    "text": "Results\nAll models were evaluated once, on the same 5,738 held-out test battles. Use the buttons to switch metric; the proposed model is in indigo.\n\n\n\n\n                            \n                                            \n\n\nFigure 1: Test-set results of all models. Dashed line: the majority-class baseline.\n\n\n\n\n\n\n\n\nModel\n\n\nLog loss ↓\n\n\nAccuracy %\n\n\nMacro F1 %\n\n\nSwap consistency\n\n\n\n\n\n\nMajority class\n\n\n1.097\n\n\n35.17\n\n\n17.35\n\n\n100.0%\n\n\n\n\nTF-IDF + LR\n\n\n1.036\n\n\n46.83\n\n\n45.77\n\n\n99.8%\n\n\n\n\nLightGBM (style)\n\n\n1.038\n\n\n46.46\n\n\n45.25\n\n\n97.4%\n\n\n\n\nDeBERTa-v3 (text only)\n\n\n1.075\n\n\n43.20\n\n\n42.86\n\n\n59.7%\n\n\n\n\nSA-DeBERTa (proposed)\n\n\n1.033\n\n\n47.37\n\n\n47.00\n\n\n96.5%\n\n\n\n\nSA-DeBERTa-Ens\n\n\n1.017\n\n\n48.40\n\n\n47.32\n\n\n–\n\n\n\n\nThree things stand out:\n\nSA-DeBERTa beats every single baseline on both log loss and accuracy, and the calibrated ensemble is best overall at 48.4% accuracy, rising to 64.4% when there is a clear winner.\nStyle is not a detail. With the same encoder and the same training budget, adding the style branch raised accuracy by 3.7 points and swap consistency from 59.7% to 95.9%: the text-only model often changed its mind when the answers were simply shown in the other order.\nIt was done on modest hardware. Everything, including the transformer, was trained on a single 6 GB laptop GPU, with mixed precision, gradient accumulation and checkpoint/resume runs.\n\n\nLearning curves\nSA-DeBERTa was trained for two epochs in resumable runs with checkpoints every 150 steps (about 80 minutes per epoch on a 6 GB laptop GPU). The final checkpoint was chosen on validation log loss.\n\n\n\n\n                            \n                                            \n\n\nFigure 2: Validation log loss and accuracy during training (1,500-battle validation subset)."
+  },
+  {
+    "objectID": "projects/hci-chatbot-preference.html#what-drives-the-predictions",
+    "href": "projects/hci-chatbot-preference.html#what-drives-the-predictions",
+    "title": "Which chatbot answer will people prefer?",
+    "section": "What drives the predictions?",
+    "text": "What drives the predictions?\n\nLength dominates\nSHAP values for the LightGBM style model show which presentation features move the predicted preference most. Length differences come first, then the length and structure of each answer, then refusals. Headings barely matter.\n\n\n\n\n                            \n                                            \n\n\nFigure 3: Mean absolute SHAP value per style feature (LightGBM, test set).\n\n\n\n\n\n\nA model that learned the users’ bias, and then some\n\nAn honest caveat. Users picked the longer answer in 61.6% of battles with a winner. When SA-DeBERTa predicts a winner, it picks the longer one 93.2% of the time, against 63.9% for the text-only model. The style branch helps accuracy precisely because it amplifies the length signal. That is a useful finding for interface designers (presentation shapes judgement), and a warning for anyone who would use such a model as a quality judge.\n\n\n\nWhere the model succeeds and fails\n\n\n\n\n                            \n                                            \n\n\nFigure 4: Test accuracy by subgroup. Numbers in brackets: battles in the subgroup.\n\n\n\n\nThe pattern is consistent across models: accuracy is highest when one answer is much longer or contains a refusal (an easy cue) and lowest when both answers look alike or contain code, where judging quality really needs understanding the content.\n\n\n\n\n                            \n                                            \n\n\nFigure 5: Confusion matrix of the calibrated ensemble, normalised by true class (row %).\n\n\n\n\nTies are recalled only 32% of the time: a single vote of “tie” can mean both good or both bad, which look nothing alike."
+  },
+  {
+    "objectID": "projects/hci-chatbot-preference.html#what-i-would-do-next",
+    "href": "projects/hci-chatbot-preference.html#what-i-would-do-next",
+    "title": "Which chatbot answer will people prefer?",
+    "section": "What I would do next",
+    "text": "What I would do next\n\nModel ties explicitly, for example as separate “both good” and “both bad” outcomes.\nLonger context and larger open models on the full Arena data, to see past the 512-token window.\nA controlled user study that varies only the length and formatting of the same answer, to separate the causal effect of style from that of content."
+  },
+  {
+    "objectID": "projects/hci-chatbot-preference.html#reproducibility",
+    "href": "projects/hci-chatbot-preference.html#reproducibility",
+    "title": "Which chatbot answer will people prefer?",
+    "section": "Reproducibility",
+    "text": "Reproducibility\nThe full pipeline (preprocessing, baselines, resumable SA-DeBERTa training, calibration, error analysis and figures) is in the code repository, with a README giving the exact commands. Random seed 42; PyTorch 2.6, Transformers 4.46, scikit-learn 1.9, LightGBM 4.7, SHAP 0.54. Every chart on this page is drawn at build time from the result files that pipeline produced.\n\nPyTorch Hugging Face Transformers DeBERTa-v3 LightGBM SHAP scikit-learn TF-IDF Temperature scaling Mixed precision"
+  },
+  {
+    "objectID": "software.html",
+    "href": "software.html",
+    "title": "Software that real businesses run on",
+    "section": "",
+    "text": "Before data science, and alongside it, I build software for businesses I know from the inside: my father’s trading company in Sharjah, my family’s restaurant in Lahore, and plant nurseries across Pakistan. These are not demos. People print cheques, bill customers and close shifts with them every day, which taught me to care about data integrity, offline use and testing. The code is private, so this page describes what each system does and how it is built."
+  },
+  {
+    "objectID": "software.html#cheque-management-system",
+    "href": "software.html#cheque-management-system",
+    "title": "Software that real businesses run on",
+    "section": "Cheque Management System",
+    "text": "Cheque Management System\nDesktop app · Zahrh Esther Hardware Trading LLC, Sharjah, UAE · in daily use since October 2026\nA Windows app to write, print, save and track supplier cheques for a hardware trading company. The finance team uses it with real cheque books, real suppliers and real printed cheques, on several office computers sharing one database.\n\nPrinting that matches the paper. A cheque layout designer with per-bank offsets (verified on SIB and RAK Bank cheques), range printing, and amounts converted to words.\nThe whole cheque life cycle: pending, printed, cleared, bounced, stopped, cancelled and spoiled, plus security cheques, received customer cheques, supplier bills and balances, payment vouchers, a calendar view and reports.\nBuilt for an office, not a demo: user roles (Admin and Staff), auto-lock, a full change log, password-protected daily backups, and an offline mode that saves and prints cheques without internet and syncs them later.\nEngineering discipline: a pnpm monorepo with pure business rules in their own package (100% test coverage enforced for money, words and dates), database migrations tested in PGlite against every role and function, Row-Level Security in Supabase, and a hardened Electron setup (context isolation, sandbox, no secret keys in the app).\n\n\nElectron React TypeScript Supabase / PostgreSQL Row-Level Security Vitest PGlite Windows installer"
+  },
+  {
+    "objectID": "software.html#pakistan-plants-billing-for-nurseries",
+    "href": "software.html#pakistan-plants-billing-for-nurseries",
+    "title": "Software that real businesses run on",
+    "section": "Pakistan Plants: billing for nurseries",
+    "text": "Pakistan Plants: billing for nurseries\nMobile app · iOS and Android · used day to day by businesses in Lahore\nA billing and credit-tracking app made for Pakistani plant nurseries, fully bilingual in English and Urdu (Noto Nastaliq, right-to-left layout).\n\nInvoices in seconds from a catalogue of 280+ plants with English and Urdu names, eight bill templates, PDF sharing straight to WhatsApp and automatic invoice numbering.\nUdhaar (credit) tracking per customer, partial and advance payments, overdue alerts and ageing buckets (0–30, 31–60, 60+ days).\nReports by date, client and plant, exported to PDF or CSV; a customer database with contact import and one-tap call or WhatsApp.\nStore listings, privacy policy, terms and a testing checklist prepared for release.\n\n\nReact Native / Expo TypeScript Supabase i18n (EN / UR, RTL) PDF generation EAS"
+  },
+  {
+    "objectID": "software.html#dimsum-pos-a-restaurant-point-of-sale",
+    "href": "software.html#dimsum-pos-a-restaurant-point-of-sale",
+    "title": "Software that real businesses run on",
+    "section": "DimSum POS: a restaurant point-of-sale",
+    "text": "DimSum POS: a restaurant point-of-sale\nDesktop app · for my family’s restaurant in Lahore\nAn offline-first Windows point-of-sale system, designed from how the restaurant actually runs: I also manage its staff, suppliers and marketing.\n\nSpecified before it was coded: a software requirements specification, an entity-relationship design, the architecture, 16 user flows, a screen and permission matrix and wireframes, then milestones.\nOrders for dine-in, takeaway, phone delivery and Foodpanda (with channel pricing); kitchen tickets and customer receipts on a thermal printer.\nControls: PIN login for owner and cashiers, discounts and voids that need the owner’s PIN, refunds with reason codes, inventory with low-stock alerts, expenses, and shift closing with cash reconciliation.\n\n\nElectron React TypeScript Drizzle ORM Thermal printing Turborepo"
+  },
+  {
+    "objectID": "software.html#excel-automation-suite-for-finance",
+    "href": "software.html#excel-automation-suite-for-finance",
+    "title": "Software that real businesses run on",
+    "section": "Excel automation suite for finance",
+    "text": "Excel automation suite for finance\nDesktop app · Zahrh Esther Hardware Trading LLC · 2022\nMy first software for the business: a Python desktop application that replaced a manual Excel routine for the chief accountant. It loads the month’s transaction files, categorises them automatically and produces financial summaries to download, cutting manual data entry and the errors that come with it.\n\nPython PyQt5 pandas Excel automation\n\nSource on GitHub →"
+  },
+  {
+    "objectID": "software.html#eyeq-eye-tracking-for-learning",
+    "href": "software.html#eyeq-eye-tracking-for-learning",
+    "title": "Software that real businesses run on",
+    "section": "EyeQ: eye tracking for learning",
+    "text": "EyeQ: eye tracking for learning\nFinal-year project · BSc Computer Science, Bahria University\nA cross-platform mobile app that tracks students’ eye movements with computer vision to estimate how difficult a quiz question is and how attentive the learner is. The capture and analysis code was written and optimised for real-time feedback, with TensorFlow and PyTorch models and Firebase for data, and the app was tested with 20 students.\n\nPython TensorFlow PyTorch OpenCV React Native Firebase"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Huzeifa Asif · Data Science & Machine Learning",
+    "section": "",
+    "text": "MS Data Science · University of Central Punjab, Lahore\n      Huzeifa Asif.\n      Software engineer → machine learning & data science\n      \n        I build data tools that real businesses use every day, and I now bring the same care to\n        machine learning: from a style-aware transformer that predicts which chatbot answer people\n        prefer, to clinical classifiers tuned for the cost of a missed diagnosis, to Spark pipelines\n        for supply-chain risk.\n      \n      \n        See my work \n         Download CV\n         Read the research\n         GitHub\n      \n    \n    \n      \n      \n      57,215chatbot battles modelled\n      Livesoftware in daily use\n    \n  \n\n\n\n  48.4%3-way accuracy predicting human preference between LLM answers (chance 33%)\n  41 / 42cancers detected on an untouched test set by the tuned KNN\n  3apps in daily use by businesses in the UAE and Pakistan\n  4data science projects, from hand-derived trees to Spark\n\n\n\n  \n    FocusWhat I work on\n  \n  \n    \n      \n      NLP & human–AI interaction\n      Transformers that model how people judge AI answers, and what that says about interface design.\n    \n    \n      \n      Machine learning\n      Leakage-free evaluation, calibrated probabilities and decisions driven by the real cost of errors.\n    \n    \n      \n      Big data\n      Distributed pipelines with PySpark and MLlib for supply-chain and predictive-maintenance problems.\n    \n    \n      \n      Software that ships\n      Desktop and mobile apps with offline mode, tests and real users who depend on them.\n    \n  \n\n\n\n  \n    Featured researchPredicting what people prefer\n  \n  \n    \n      Test accuracy · 5,738 held-out battles\n      \n        Majority class35.2%\n        DeBERTa text-only43.2%\n        LightGBM (style)46.5%\n        TF-IDF + LR46.8%\n        SA-DeBERTa47.4%\n        SA-DeBERTa-Ens48.4%\n      \n      Bars on a 0–50% scale. Three classes: A preferred, B preferred, tie.\n    \n    \n      Research paper · Advanced HCI\n      Which chatbot answer will people prefer? A style-aware transformer on Chatbot Arena data\n      SA-DeBERTa reads a prompt and two LLM answers together and fuses them with 16\n         interpretable style features. Trained on 57,215 real user votes between 64 models, it beats\n         every baseline, and SHAP analysis shows that answer length is the strongest driver of what\n         people prefer.\n      PyTorchDeBERTa-v3LightGBMSHAPCalibration\n      Read the case study \n    \n  \n\n\n\n  \n    ProjectsData science & machine learning\n    \n      All\n      HCI & NLP\n      Machine learning\n      Big data\n    \n  \n  \n    \n      \n      \n        Advanced HCIPaper\n        Chatbot preference prediction\n        A DeBERTa cross-encoder with style features, swap augmentation and a calibrated ensemble.\n        48.4% accuracy · 64.4% on clear winners\n        TransformersNLPSHAP\n      \n    \n    \n      \n      \n        Machine learning\n        Breast cancer diagnosis: DT vs RF vs KNN\n        Leakage-free tuning, validation curves and a decision threshold chosen by the cost of a missed cancer.\n        97.4% accuracy · 41 of 42 cancers found\n        scikit-learnPipelinesCost analysis\n      \n    \n    \n      \n      \n        Machine learning\n        Student outcomes: ID3 by hand and in code\n        Every entropy and information gain derived by hand, then verified with a from-scratch ID3. Try the tree yourself.\n        9 / 9 hand-computed gains verified\n        EntropyDecision treesInteractive\n      \n    \n    \n      \n      \n        Big dataIn progress\n        Supply chain delay prediction\n        Predicting late deliveries at order time on the DataCo dataset, with a leakage audit and Spark MLlib pipelines.\n        PySparkMLlibClassification\n      \n    \n    \n      \n      \n        Predictive maintenanceIn progress\n        Aircraft engine failure prediction\n        Predicting the remaining useful life of turbofan engines from multivariate sensor time series (NASA C-MAPSS).\n        PythonTime seriesRegression\n      \n    \n  \n\n\n\n  \n    In productionSoftware people use every day\n    Built for my father's trading company, my family's restaurant and plant nurseries across Pakistan.\n    All software \n  \n  \n    \n      Live\n      Cheque Management System\n      Write, print and track supplier cheques across office PCs, with offline mode, roles, backups and a full change log.\n      ElectronTypeScriptSupabase\n    \n    \n      Live\n      Pakistan Plants billing\n      Bilingual English/Urdu billing for nurseries: 280+ plants, credit tracking and WhatsApp-ready PDF invoices.\n      React NativeExpoSupabase\n    \n    \n      \n      DimSum POS\n      Offline-first restaurant point-of-sale with kitchen tickets, thermal receipts and shift cash reconciliation.\n      ElectronReactDrizzle\n    \n    \n      \n      EyeQ\n      Final-year project: eye tracking with computer vision to measure quiz difficulty, tested with 20 students.\n      OpenCVTensorFlowReact Native\n    \n  \n\n\n\n  \n    PathExperience & education\n    \n      2026 – nowMS Data ScienceUniversity of Central Punjab, Lahore\n      Nov 2026Research paper: SA-DeBERTaChatbot preference prediction, Advanced HCI\n      Oct 2026Cheque Management System goes liveZahrh Esther Hardware Trading, Sharjah\n      Mar 2025 – nowSoftware Engineer (remote)Zahrh Esther Hardware Trading LLC, UAE\n      3-month internshipData Science InternTab Solutions, Lahore\n      2021 – 2025BSc Computer ScienceBahria University, Lahore · Academic Excellence Certificate\n    \n  \n  \n    ToolboxWhat I work with\n    \n      Machine learning & NLP\n      Pythonscikit-learnPyTorchTensorFlowTransformersLightGBMSHAPOpenCV\n      Data\n      pandasNumPyPySparkSQLPostgreSQLSupabaseExcel\n      Software\n      TypeScriptReactReact NativeElectronPyQt5\n      Tools\n      GitLinuxJupyterQuartouv\n    \n  \n\n\n\n  \n    Let's talk\n    Open to data science and machine learning internships, research collaborations and graduate opportunities.\n  \n  \n     Email me\n     CV\n     LinkedIn\n  \n\n\n Built with Quarto and Python. Every chart on the project\npages is computed from that project's own result files when the site is built.\n\n\n\n\n\n Back to top"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About me",
+    "section": "",
+    "text": "I'm a software engineer moving into machine learning and data\n    science. I build data tools that real businesses use every day, and I'm now doing an MS in\n    Data Science to put that engineering on solid statistical and research ground.\n    \n       Download CV\n       huzeifa888@gmail.com\n       LinkedIn\n       GitHub"
+  },
+  {
+    "objectID": "about.html#what-i-focus-on",
+    "href": "about.html#what-i-focus-on",
+    "title": "About me",
+    "section": "What I focus on",
+    "text": "What I focus on\nNLP and human–AI interaction, predictive maintenance, supply chain risk and computer vision: problems where a model’s output turns into a decision someone has to act on. I care about doing the unglamorous parts right: leakage-free splits, honest baselines, calibrated probabilities and error analysis that says where a model fails."
+  },
+  {
+    "objectID": "about.html#experience",
+    "href": "about.html#experience",
+    "title": "About me",
+    "section": "Experience",
+    "text": "Experience\n\n\nSoftware Engineer Mar 2025 – present · remote\n\nZahrh Esther Hardware Trading LLC · Sharjah, UAE\n\nBuilt and shipped a multi-user Cheque Management System (Electron, React, TypeScript, Supabase) used live by the finance team across several office computers.\nShipped a Python desktop application (PyQt5, pandas) that automates financial and accounting tasks, replacing manual Excel workflows.\nAutomated the finance team’s data processing and reporting with Python and Excel.\n\nSee the software →\n\n\n\nData Science Intern 3-month internship\n\nTab Solutions · Lahore, Pakistan\n\nCleaned and analysed business datasets with Python and pandas.\nBuilt and tested machine learning models and presented the results to the team."
+  },
+  {
+    "objectID": "about.html#education",
+    "href": "about.html#education",
+    "title": "About me",
+    "section": "Education",
+    "text": "Education\n\n\n2026 – present\nMS Data Science\nUniversity of Central Punjab, Lahore\nMachine Learning · Advanced Human–Computer Interaction · Big Data. Research paper on chatbot preference prediction →\n\n\n2021 – 2025\nBSc Computer Science\nBahria University, Lahore\nAcademic Excellence Certificate (Fall 2024). Final-year project: EyeQ, eye tracking to measure quiz difficulty, tested with 20 students."
+  },
+  {
+    "objectID": "about.html#skills",
+    "href": "about.html#skills",
+    "title": "About me",
+    "section": "Skills",
+    "text": "Skills\n\n\nCode\nPython · SQL · TypeScript · JavaScript · C++\n\n\nMachine learning\nscikit-learn · PyTorch · TensorFlow · Hugging Face Transformers · LightGBM · SHAP · OpenCV\n\n\nData\npandas · NumPy · PySpark · PostgreSQL · SQLite · Supabase · Excel · Power BI (basic)\n\n\nApps\nReact · React Native / Expo · Electron · PyQt5 · Tailwind\n\n\nTools\nGit · Linux (Ubuntu) · Jupyter · Quarto · uv · VS Code\n\n\nLanguages\nUrdu (native) · English (professional working proficiency)"
+  },
+  {
+    "objectID": "about.html#beyond-code",
+    "href": "about.html#beyond-code",
+    "title": "About me",
+    "section": "Beyond code",
+    "text": "Beyond code\n\n\nFamily business\nI help run my family’s restaurant in Lahore (staff, suppliers and marketing), which is also why its point-of-sale system is built the way it is.\n\n\nLeadership\nGoogle Developer Student Clubs, Bahria University Lahore: core team member of the AI team (2023–2024).\n\n\nBadminton\nCaptain of the Bahria University Lahore team. Gold in singles and doubles (2024), silver in doubles (2022)."
+  },
+  {
+    "objectID": "projects/bigdata-supply-chain.html",
+    "href": "projects/bigdata-supply-chain.html",
+    "title": "Will this order arrive late? Supply chain risk with PySpark",
+    "section": "",
+    "text": "In progress · Big Data"
+  },
+  {
+    "objectID": "projects/bigdata-supply-chain.html#why-it-matters",
+    "href": "projects/bigdata-supply-chain.html#why-it-matters",
+    "title": "Will this order arrive late? Supply chain risk with PySpark",
+    "section": "Why it matters",
+    "text": "Why it matters\nA late delivery is rarely a surprise to the data: shipping mode, destination market, product category, order timing and the promised schedule all carry signal. If the risk is known when the order is placed, a company can choose a faster shipping mode, warn the customer, or reorder stock earlier. This is the business problem behind the project."
+  },
+  {
+    "objectID": "projects/bigdata-supply-chain.html#why-spark",
+    "href": "projects/bigdata-supply-chain.html#why-spark",
+    "title": "Will this order arrive late? Supply chain risk with PySpark",
+    "section": "Why Spark",
+    "text": "Why Spark\nThe dataset is large enough, and wide enough (dozens of columns of mixed types), that a single-machine pandas workflow becomes awkward to repeat and impossible to scale. The project uses Spark the way it would be used on a real cluster: lazy DataFrame transformations, a declared schema, and an MLlib Pipeline whose every step (indexing, encoding, assembling, scaling, modelling) is fitted on training data only and can be re-run on new data unchanged."
+  },
+  {
+    "objectID": "projects/bigdata-supply-chain.html#the-pipeline",
+    "href": "projects/bigdata-supply-chain.html#the-pipeline",
+    "title": "Will this order arrive late? Supply chain risk with PySpark",
+    "section": "The pipeline",
+    "text": "The pipeline\n\n\n\n\n\nflowchart LR\n  A[(\"Raw CSV&lt;br/&gt;DataCo orders\")] --&gt; B[\"Ingest with&lt;br/&gt;explicit schema\"]\n  B --&gt; C[\"Clean & dedupe&lt;br/&gt;parse dates\"]\n  C --&gt; D[\"Drop leaking&lt;br/&gt;columns\"]\n  D --&gt; E[\"Feature engineering&lt;br/&gt;time · market · shipping\"]\n  E --&gt; F[\"MLlib Pipeline&lt;br/&gt;StringIndexer → OneHot →&lt;br/&gt;VectorAssembler → Scaler\"]\n  F --&gt; G[\"Models&lt;br/&gt;LogReg · RF · GBT\"]\n  G --&gt; H[\"CrossValidator&lt;br/&gt;AUC · F1 · recall\"]\n  H --&gt; I[(\"Results &&lt;br/&gt;feature importance\")]\n  classDef done fill:#DCFCE7,stroke:#16A34A,color:#14532D;\n  classDef now fill:#FEF3C7,stroke:#D97706,color:#78350F;\n  classDef todo fill:#E0E7FF,stroke:#6366F1,color:#1E1B4B;\n  class A done; class B now; class C,D,E,F,G,H,I todo;\n\n\n\n\n\n\n\n\nProblem framing and datasetBinary target: late delivery risk. Business metric: recall on late orders, at a controlled false-alarm rate.\n\n\nIngestionSpark session, explicit schema (no type inference on a large CSV), basic profiling of every column.\n\n\nCleaning and leakage auditColumns only known after shipping (real shipping days, delivery status, shipping date) describe the outcome and must be dropped, or the model learns the answer instead of the risk.\n\n\nFeature engineeringOrder weekday, month and hour; scheduled shipping days; shipping mode; market, region and country; product category; order value and discount.\n\n\nMLlib pipelineStringIndexer and OneHotEncoder for categories, VectorAssembler and StandardScaler, fitted on the training split only.\n\n\nModels and tuningLogistic regression (baseline), Random Forest and Gradient-Boosted Trees, tuned with CrossValidator on a stratified split.\n\n\nEvaluationROC-AUC, PR-AUC, F1 and recall on late orders; feature importance; error analysis by market and shipping mode.\n\n\nScaling notesPartitioning, caching and run times, to show what changes when the data no longer fits on one machine."
+  },
+  {
+    "objectID": "projects/bigdata-supply-chain.html#the-trap-this-project-is-designed-to-avoid",
+    "href": "projects/bigdata-supply-chain.html#the-trap-this-project-is-designed-to-avoid",
+    "title": "Will this order arrive late? Supply chain risk with PySpark",
+    "section": "The trap this project is designed to avoid",
+    "text": "The trap this project is designed to avoid\n\nTarget leakage. In this kind of dataset, some columns are recorded after the parcel has shipped. A model given “actual days for shipping” next to “scheduled days” can reach near-perfect accuracy by subtracting one from the other, and is useless in practice. The audit in step 3 decides, column by column, what is genuinely known at order time. Getting this right matters more than any choice of algorithm."
+  },
+  {
+    "objectID": "projects/bigdata-supply-chain.html#results",
+    "href": "projects/bigdata-supply-chain.html#results",
+    "title": "Will this order arrive late? Supply chain risk with PySpark",
+    "section": "Results",
+    "text": "Results\nComing soon. This section will show the model comparison, the precision–recall trade-off on late orders and the most important risk factors, generated from the pipeline’s saved metrics.\n\nApache Spark PySpark Spark MLlib Pipelines CrossValidator Gradient-Boosted Trees Classification"
+  },
+  {
+    "objectID": "projects/ml-breast-cancer.html",
+    "href": "projects/ml-breast-cancer.html",
+    "title": "Breast cancer diagnosis: which classifier misses the fewest cancers?",
+    "section": "",
+    "text": "Machine learning · MS Data Science"
+  },
+  {
+    "objectID": "projects/ml-breast-cancer.html#why-this-problem-needs-care",
+    "href": "projects/ml-breast-cancer.html#why-this-problem-needs-care",
+    "title": "Breast cancer diagnosis: which classifier misses the fewest cancers?",
+    "section": "Why this problem needs care",
+    "text": "Why this problem needs care\nA fine-needle aspirate is imaged and the cell nuclei are measured: radius, texture, area, concavity and so on, each summarised as a mean, a standard error and a “worst” value. The classifier should support, not replace, the pathologist.\nThe two errors are not equal. A false negative (a cancer labelled benign) can delay treatment; a false positive costs an extra biopsy. So the project optimises for recall on the malignant class without letting specificity collapse, and checks everything with metrics that are not fooled by the 63/37 class split."
+  },
+  {
+    "objectID": "projects/ml-breast-cancer.html#a-leakage-free-protocol",
+    "href": "projects/ml-breast-cancer.html#a-leakage-free-protocol",
+    "title": "Breast cancer diagnosis: which classifier misses the fewest cancers?",
+    "section": "A leakage-free protocol",
+    "text": "A leakage-free protocol\n\nFive patients were set aside first (stratified), only to demonstrate final predictions.\nThe other 564 were split 80/20 with stratification: 451 training, 113 test, both with a 37% malignant rate.\nImputation and scaling live inside scikit-learn pipelines, so their statistics are learned only from the data a model is fitted on. Scaling matters for KNN: feature ranges differ by a factor of more than 200,000.\nEach model was tuned with GridSearchCV, 5-fold stratified, scored by malignant-class F1. The test set was used exactly once.\n\n\n\n\n\nModel\n\n\nGrid searched\n\n\nChosen by CV\n\n\n\n\n\n\nDecision Tree\n\n\ncriterion, max_depth 2–8/None, min_samples_leaf\n\n\ngini, depth 5, leaf 1\n\n\n\n\nRandom Forest\n\n\nn_estimators, max_depth, max_features, min_samples_leaf\n\n\n100 trees, depth 5, sqrt, leaf 4\n\n\n\n\nKNN\n\n\nk = 1, 3, …, 31; uniform/distance weights; Manhattan/Euclidean\n\n\nk = 3, uniform, Euclidean"
+  },
+  {
+    "objectID": "projects/ml-breast-cancer.html#results-on-the-shared-test-set",
+    "href": "projects/ml-breast-cancer.html#results-on-the-shared-test-set",
+    "title": "Breast cancer diagnosis: which classifier misses the fewest cancers?",
+    "section": "Results on the shared test set",
+    "text": "Results on the shared test set\n\n\n\n\n                            \n                                            \n\n\nFigure 1: Test-set metrics at the default 0.5 threshold (positive class = malignant). Zoomed in: all models are strong.\n\n\n\n\n\n\n\n\n                            \n                                            \n\n\nFigure 2: Confusion matrices on the 113 test patients (42 malignant, 71 benign).\n\n\n\n\nKNN misses one cancer, the Decision Tree two, the Random Forest three. KNN and the tree tie on accuracy (97.4%); KNN has the best recall, F1, balanced accuracy and MCC. The Random Forest is the interesting case: it is worst at the 0.5 threshold but best at ranking (ROC-AUC 0.997, log loss 0.096). Its boundary is just placed too conservatively, so three cancers fall slightly below the cut-off."
+  },
+  {
+    "objectID": "projects/ml-breast-cancer.html#over--and-underfitting-made-visible",
+    "href": "projects/ml-breast-cancer.html#over--and-underfitting-made-visible",
+    "title": "Breast cancer diagnosis: which classifier misses the fewest cancers?",
+    "section": "Over- and underfitting, made visible",
+    "text": "Over- and underfitting, made visible\n\n\n\n\n                            \n                                            \n\n\nFigure 3: Validation curves from 5-fold CV on the training set: F1 on the training folds versus the validation folds.\n\n\n\n\nAn unrestricted tree reaches a perfect training F1 from depth 7 while validation F1 drops to about 0.90: textbook overfitting, so CV picked depth 5 (amber line). For KNN, k = 1 memorises the training data, large k over-smooths and both curves fall; k = 3 gives the best validation F1 with a small gap."
+  },
+  {
+    "objectID": "projects/ml-breast-cancer.html#choosing-the-threshold-by-the-cost-of-errors",
+    "href": "projects/ml-breast-cancer.html#choosing-the-threshold-by-the-cost-of-errors",
+    "title": "Breast cancer diagnosis: which classifier misses the fewest cancers?",
+    "section": "Choosing the threshold by the cost of errors",
+    "text": "Choosing the threshold by the cost of errors\nAssuming a missed cancer costs five times a false alarm (cost = 5·FN + FP), the cheapest KNN threshold was searched using out-of-fold training predictions only.\n\n\n\n\n                            \n                                            \n\n\nFigure 4: Out-of-fold errors and cost for each possible KNN threshold (k = 3 gives probabilities 0, ⅓, ⅔, 1).\n\n\n\n\n\nWhat the test set said. Lowering the threshold to 0.33 (malignant if any one of the three neighbours is malignant) was cheapest on the training folds. On the test set it caught no extra cancer (FN stayed at 1) and added 5 false alarms (specificity 97.2% → 90.1%). The default 0.5 was kept for the reported results; 0.33 remains the option for a clinic that values sensitivity above all."
+  },
+  {
+    "objectID": "projects/ml-breast-cancer.html#does-the-model-learn-real-signal",
+    "href": "projects/ml-breast-cancer.html#does-the-model-learn-real-signal",
+    "title": "Breast cancer diagnosis: which classifier misses the fewest cancers?",
+    "section": "Does the model learn real signal?",
+    "text": "Does the model learn real signal?\n\n\n\n\n                            \n                                            \n\n\nFigure 5: Random Forest feature importance (top 10).\n\n\n\n\nThe ranking matches clinical knowledge: malignant nuclei are larger and more irregular. That is reassuring evidence that the models learn the biology, not artefacts."
+  },
+  {
+    "objectID": "projects/ml-breast-cancer.html#final-predictions-on-five-unseen-patients",
+    "href": "projects/ml-breast-cancer.html#final-predictions-on-five-unseen-patients",
+    "title": "Breast cancer diagnosis: which classifier misses the fewest cancers?",
+    "section": "Final predictions on five unseen patients",
+    "text": "Final predictions on five unseen patients\n\n\n\n\nPatient\n\n\nmean radius\n\n\nworst area\n\n\nworst concave pts\n\n\nP(malignant)\n\n\nPredicted\n\n\nActual\n\n\n\n\n\n\n\n\nSample 1 (#216)\n\n\n11.89\n\n\n531.2\n\n\n0.114\n\n\n0.00\n\n\nBenign\n\n\nBenign\n\n\n✓\n\n\n\n\nSample 2 (#554)\n\n\n12.88\n\n\n595.7\n\n\n0.065\n\n\n0.00\n\n\nBenign\n\n\nBenign\n\n\n✓\n\n\n\n\nSample 3 (#456)\n\n\n11.63\n\n\n527.8\n\n\n0.068\n\n\n0.00\n\n\nBenign\n\n\nBenign\n\n\n✓\n\n\n\n\nSample 4 (#39)\n\n\n13.48\n\n\n740.4\n\n\n0.226\n\n\n0.67\n\n\nMalignant\n\n\nMalignant\n\n\n✓\n\n\n\n\nSample 5 (#393)\n\n\n21.61\n\n\n2081.0\n\n\n0.242\n\n\n1.00\n\n\nMalignant\n\n\nMalignant\n\n\n✓\n\n\n\n\nAll five are correct. Patient 4 is the instructive one: its size is in the benign range, but its worst concave points is high and only two of its three neighbours are malignant (P = 0.67). A borderline case like this should go to the pathologist for a close look, which is exactly how such a tool should be used."
+  },
+  {
+    "objectID": "projects/ml-breast-cancer.html#limits-stated-plainly",
+    "href": "projects/ml-breast-cancer.html#limits-stated-plainly",
+    "title": "Breast cancer diagnosis: which classifier misses the fewest cancers?",
+    "section": "Limits, stated plainly",
+    "text": "Limits, stated plainly\n\nWith 42 malignant test cases, one patient moves recall by 2.4 points; KNN and the tree are within each other’s CV standard deviation.\nOne institution, early 1990s: performance on other equipment and populations is unknown.\nWith k = 3, KNN probabilities are coarse and poorly calibrated (log loss 0.365 vs 0.096 for the Random Forest). If calibrated risk scores were needed, the Random Forest wins.\nThe 5:1 cost ratio is an assumption, to be agreed with clinicians.\n\n\nscikit-learn Pipelines GridSearchCV Stratified K-fold Cost-sensitive thresholds ROC / PR analysis MCC"
+  }
+]
