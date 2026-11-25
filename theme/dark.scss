@@ -1,0 +1,35 @@
+/*-- scss:defaults --*/
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+$body-bg:        #0B0F1A;
+$body-color:     #E4E7EE;
+$primary:        #8B93FF;
+$secondary:      #94A3B8;
+$success:        #4ADE80;
+$warning:        #F5B041;
+$link-color:     #A5ACFF;
+$navbar-bg:      #0B0F1A;
+$navbar-fg:      #E4E7EE;
+$navbar-hl:      #A5ACFF;
+$footer-bg:      #0B0F1A;
+$border-color:   rgba(255, 255, 255, 0.09);
+$code-bg:        #161C2C;
+
+/*-- scss:rules --*/
+:root, [data-bs-theme] {
+  --hz-bg:        #0B0F1A;
+  --hz-surface:   #121829;
+  --hz-surface-2: #182036;
+  --hz-ink:       #E4E7EE;
+  --hz-muted:     #9AA3B5;
+  --hz-line:      rgba(255, 255, 255, 0.09);
+  --hz-primary:   #8B93FF;
+  --hz-primary-ink: #B9BEFF;
+  --hz-primary-soft: rgba(139, 147, 255, 0.12);
+  --hz-accent:    #F5B041;
+  --hz-accent-soft: rgba(245, 176, 65, 0.14);
+  --hz-live:      #4ADE80;
+  --hz-live-soft: rgba(74, 222, 128, 0.12);
+  --hz-shadow:    0 1px 2px rgba(0,0,0,.3), 0 12px 32px -16px rgba(0,0,0,.6);
+  --hz-shadow-hover: 0 2px 4px rgba(0,0,0,.3), 0 24px 48px -20px rgba(139,147,255,.35);
+}

@@ -1,0 +1,61 @@
+{
+  "log_loss": 1.033451795578003,
+  "accuracy": 0.47368421052631576,
+  "precision": 0.47214917670850026,
+  "recall": 0.47035425778481416,
+  "f1": 0.4700163412344451,
+  "confusion": [
+    [
+      1034,
+      596,
+      388
+    ],
+    [
+      545,
+      999,
+      422
+    ],
+    [
+      547,
+      522,
+      685
+    ]
+  ],
+  "swap_consistency": 0.9654932032066922,
+  "single_order": {
+    "log_loss": 1.0347670316696167,
+    "accuracy": 0.47159288950853956,
+    "precision": 0.47054740328509714,
+    "recall": 0.4684138086446698,
+    "f1": 0.46787890765287177
+  },
+  "val": {
+    "log_loss": 1.0368151664733887,
+    "accuracy": 0.46906499826207854,
+    "precision": 0.4667030774682377,
+    "recall": 0.4665268361699741,
+    "f1": 0.4651098786903403,
+    "swap_consistency": 0.9584636774417796
+  },
+  "train_minutes": 90.25307628711064,
+  "args": {
+    "mode": "style",
+    "backbone": "/home/ensai/Desktop/Huzeifa_Proj/MSDS/models/deberta-v3-base",
+    "max_len": 512,
+    "prompt_len": 96,
+    "epochs": 1,
+    "bs": 2,
+    "accum": 8,
+    "lr": 1e-05,
+    "head_lr": 5e-05,
+    "evals_per_epoch": 8,
+    "val_subset": 1500,
+    "train_frac": 1.0,
+    "grad_ckpt": false,
+    "resume": false,
+    "init": "/home/ensai/Desktop/Huzeifa_Proj/MSDS/models/sa_deberta_e1_best.pt",
+    "run": "sa_deberta_e2",
+    "epoch_offset": 1,
+    "max_steps": 0
+  }
+}

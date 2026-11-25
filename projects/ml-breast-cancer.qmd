@@ -1,0 +1,254 @@
+---
+title: "Breast cancer diagnosis: which classifier misses the fewest cancers?"
+description: "Decision Tree, Random Forest and KNN compared on the Wisconsin Diagnostic data, with leakage-free tuning, error costs and threshold analysis."
+image: ../assets/figures/ml/fig2_roc_pr_curves.png
+---
+
+```{=html}
+<div class="case-head">
+  <span class="badge-status research">Machine learning · MS Data Science</span>
+</div>
+<div class="actions">
+  <a class="btn-hz primary" href="../assets/papers/Breast_Cancer_DT_RF_KNN_Report.pdf"><i class="bi bi-file-earmark-pdf"></i> Full report (PDF)</a>
+  <a class="btn-hz" href="https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic"><i class="bi bi-database"></i> Dataset (UCI)</a>
+</div>
+<div class="glance">
+  <div><span>Question</span><p>Is a tumour malignant or benign, from 30 measurements of cell nuclei?</p></div>
+  <div><span>Data</span><p>569 patients, 30 numeric features, 37% malignant (Breast Cancer Wisconsin, Diagnostic)</p></div>
+  <div><span>Models</span><p>Decision Tree, Random Forest, K-Nearest Neighbours, tuned by 5-fold CV</p></div>
+  <div><span>Priority</span><p>Recall on malignant: a missed cancer costs far more than an extra biopsy</p></div>
+  <div><span>Stack</span><p>Python · scikit-learn 1.9 · pandas · Matplotlib</p></div>
+</div>
+```
+
+```{python}
+#| label: setup
+import pandas as pd
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+from py.charts import show, load_json, table, INDIGO, AMBER, SLATE, SLATE_DARK, TEAL, ROSE, TEXT
+
+s = load_json("ml-breast-cancer", "summary.json")
+R = s["results"]
+models = ["Decision Tree", "Random Forest", "KNN"]
+best = s["best_name"]
+k = R[best]
+```
+
+```{python}
+#| output: asis
+print(f"""
+::: {{.kpis}}
+::: {{.kpi .hl}}
+**{int(k['TP'])} / {int(k['TP'] + k['FN'])}**
+[malignant tumours detected on the test set by the chosen KNN]{{}}
+:::
+::: {{.kpi}}
+**{k['Accuracy']*100:.1f}%**
+[test accuracy ({int(k['TP']+k['TN'])} of {int(k['TP']+k['TN']+k['FP']+k['FN'])} correct)]{{}}
+:::
+::: {{.kpi}}
+**{k['MCC']:.3f}**
+[Matthews correlation, robust to the class imbalance]{{}}
+:::
+::: {{.kpi}}
+**5 / 5**
+[reserved patients, never seen in tuning, classified correctly]{{}}
+:::
+:::
+""")
+```
+
+## Why this problem needs care
+
+A fine-needle aspirate is imaged and the cell nuclei are measured: radius, texture,
+area, concavity and so on, each summarised as a mean, a standard error and a "worst"
+value. The classifier should **support, not replace, the pathologist**.
+
+The two errors are not equal. A **false negative** (a cancer labelled benign) can delay
+treatment; a **false positive** costs an extra biopsy. So the project optimises for
+**recall on the malignant class** without letting specificity collapse, and checks
+everything with metrics that are not fooled by the 63/37 class split.
+
+## A leakage-free protocol
+
+1. **Five patients were set aside first** (stratified), only to demonstrate final predictions.
+2. The other 564 were split 80/20 with stratification: **451 training, 113 test**, both
+   with a 37% malignant rate.
+3. Imputation and scaling live **inside scikit-learn pipelines**, so their statistics are
+   learned only from the data a model is fitted on. Scaling matters for KNN: feature
+   ranges differ by a factor of more than 200,000.
+4. Each model was tuned with **GridSearchCV, 5-fold stratified, scored by malignant-class F1**.
+   The test set was used exactly once.
+
+```{python}
+#| output: asis
+bp = s["best_params"]
+rows = [
+    {"m": "Decision Tree", "g": "criterion, max_depth 2–8/None, min_samples_leaf",
+     "sel": f"{bp['Decision Tree']['criterion']}, depth {bp['Decision Tree']['max_depth']}, leaf {bp['Decision Tree']['min_samples_leaf']}"},
+    {"m": "Random Forest", "g": "n_estimators, max_depth, max_features, min_samples_leaf",
+     "sel": f"{bp['Random Forest']['n_estimators']} trees, depth {bp['Random Forest']['max_depth']}, {bp['Random Forest']['max_features']}, leaf {bp['Random Forest']['min_samples_leaf']}"},
+    {"m": "KNN", "g": "k = 1, 3, …, 31; uniform/distance weights; Manhattan/Euclidean",
+     "sel": f"k = {bp['KNN']['n_neighbors']}, {bp['KNN']['weights']}, Euclidean"},
+]
+print(table(rows, [("m", "Model"), ("g", "Grid searched"), ("sel", "Chosen by CV")], best=2))
+```
+
+## Results on the shared test set
+
+```{python}
+#| label: fig-metrics
+#| fig-cap: "Test-set metrics at the default 0.5 threshold (positive class = malignant). Zoomed in: all models are strong."
+mets = [("Accuracy", "Accuracy"), ("Recall", "Recall"), ("Precision", "Precision"), ("F1", "F1"),
+        ("Specificity", "Specificity"), ("Balanced accuracy", "Balanced acc."), ("MCC", "MCC"), ("ROC-AUC", "ROC-AUC")]
+fig = go.Figure()
+for m, c in zip(models, [SLATE, TEAL, INDIGO]):
+    fig.add_bar(x=[lab for _, lab in mets], y=[R[m][key] for key, _ in mets], name=m + (" (chosen)" if m == best else ""),
+                marker_color=c, hovertemplate="%{x}: %{y:.3f}<extra>" + m + "</extra>")
+fig.update_layout(barmode="group", yaxis=dict(range=[0.88, 1.0], tickformat=".2f"), bargap=0.25, margin=dict(t=50))
+show(fig, 400)
+```
+
+```{python}
+#| label: fig-cm
+#| fig-cap: "Confusion matrices on the 113 test patients (42 malignant, 71 benign)."
+fig = make_subplots(rows=1, cols=3, subplot_titles=models, horizontal_spacing=0.06)
+for i, m in enumerate(models, start=1):
+    r = R[m]
+    z = [[r["TN"], r["FP"]], [r["FN"], r["TP"]]]
+    lab = [[f"TN<br><b>{int(r['TN'])}</b>", f"FP<br><b>{int(r['FP'])}</b>"],
+           [f"FN<br><b>{int(r['FN'])}</b>", f"TP<br><b>{int(r['TP'])}</b>"]]
+    fig.add_heatmap(z=[[1, 0.25], [0.6 if r["FN"] else 0.05, 0.85]], x=["pred. benign", "pred. malignant"],
+                    y=["benign", "malignant"], text=lab, texttemplate="%{text}", showscale=False, xgap=3, ygap=3,
+                    colorscale=[[0, "rgba(148,163,184,0.12)"], [0.5, "rgba(245,165,36,0.55)"], [1, "rgba(99,102,241,0.75)"]],
+                    hoverinfo="skip", row=1, col=i)
+fig.update_yaxes(autorange="reversed", showgrid=False)
+fig.update_xaxes(showgrid=False)
+fig.update_yaxes(showticklabels=False, col=2); fig.update_yaxes(showticklabels=False, col=3)
+fig.update_annotations(font=dict(size=13, color=TEXT))
+fig.update_layout(margin=dict(t=40))
+show(fig, 300)
+```
+
+**KNN misses one cancer, the Decision Tree two, the Random Forest three.** KNN and the
+tree tie on accuracy (97.4%); KNN has the best recall, F1, balanced accuracy and MCC.
+The Random Forest is the interesting case: it is *worst* at the 0.5 threshold but
+*best* at ranking (ROC-AUC 0.997, log loss 0.096). Its boundary is just placed too
+conservatively, so three cancers fall slightly below the cut-off.
+
+## Over- and underfitting, made visible
+
+```{python}
+#| label: fig-val
+#| fig-cap: "Validation curves from 5-fold CV on the training set: F1 on the training folds versus the validation folds."
+c = s["curves"]
+fig = make_subplots(rows=1, cols=2, subplot_titles=("Decision Tree: max depth", "KNN: number of neighbours k"),
+                    horizontal_spacing=0.1)
+for (x, tr, va, col) in [(c["depths"], c["dt_train"], c["dt_val"], 1), (c["ks"], c["knn_train"], c["knn_val"], 2)]:
+    fig.add_scatter(x=x, y=tr, name="training folds", line=dict(color=SLATE, width=2, dash="dot"), row=1, col=col,
+                    showlegend=(col == 1), legendgroup="tr", hovertemplate="%{x}: %{y:.3f}<extra>train</extra>")
+    fig.add_scatter(x=x, y=va, name="validation folds", line=dict(color=INDIGO, width=2.5), mode="lines+markers",
+                    marker=dict(size=5), row=1, col=col, showlegend=(col == 1), legendgroup="va",
+                    hovertemplate="%{x}: %{y:.3f}<extra>validation</extra>")
+fig.add_vline(x=bp["Decision Tree"]["max_depth"], line=dict(color=AMBER, dash="dash"), row=1, col=1)
+fig.add_vline(x=bp["KNN"]["n_neighbors"], line=dict(color=AMBER, dash="dash"), row=1, col=2)
+fig.update_yaxes(title_text="F1 (malignant)", range=[0.8, 1.01], row=1, col=1)
+fig.update_yaxes(range=[0.8, 1.01], row=1, col=2)
+fig.update_xaxes(title_text="max depth", row=1, col=1); fig.update_xaxes(title_text="k", row=1, col=2)
+fig.update_annotations(font=dict(size=13, color=TEXT))
+fig.update_layout(margin=dict(t=70), legend=dict(y=1.15))
+show(fig, 380)
+```
+
+An unrestricted tree reaches a perfect training F1 from depth 7 while validation F1
+drops to about 0.90: textbook **overfitting**, so CV picked depth 5 (amber line). For
+KNN, **k = 1 memorises** the training data, large k **over-smooths** and both curves
+fall; k = 3 gives the best validation F1 with a small gap.
+
+## Choosing the threshold by the cost of errors
+
+Assuming a missed cancer costs **five times** a false alarm (cost = 5·FN + FP), the
+cheapest KNN threshold was searched using **out-of-fold training predictions only**.
+
+```{python}
+#| label: fig-threshold
+#| fig-cap: "Out-of-fold errors and cost for each possible KNN threshold (k = 3 gives probabilities 0, ⅓, ⅔, 1)."
+t = pd.DataFrame(s["oof_thresholds"])
+fig = make_subplots(specs=[[{"secondary_y": True}]])
+xl = [f"{v:.2f}" for v in t.threshold]
+fig.add_bar(x=xl, y=t.FN, name="missed cancers (FN)", marker_color=ROSE, hovertemplate="FN %{y}<extra></extra>")
+fig.add_bar(x=xl, y=t.FP, name="false alarms (FP)", marker_color=SLATE, hovertemplate="FP %{y}<extra></extra>")
+fig.add_scatter(x=xl, y=t.cost, name="cost = 5·FN + FP", mode="lines+markers+text", text=t.cost, textposition="top center",
+                line=dict(color=INDIGO, width=3), marker=dict(size=9), secondary_y=True,
+                hovertemplate="cost %{y}<extra></extra>")
+fig.update_layout(barmode="group", xaxis_title="decision threshold on P(malignant)", margin=dict(t=50))
+fig.update_yaxes(title_text="errors (training folds)", secondary_y=False)
+fig.update_yaxes(title_text="cost", secondary_y=True, showgrid=False, range=[0, t.cost.max() * 1.25])
+show(fig, 380)
+```
+
+```{python}
+#| output: asis
+a, b = s["threshold_results"]["threshold = 0.50"], s["threshold_results"]["threshold = 0.33"]
+print(f"""
+::: {{.insight}}
+**What the test set said.** Lowering the threshold to 0.33 (malignant if *any one* of the
+three neighbours is malignant) was cheapest on the training folds. On the test set it caught
+no extra cancer (FN stayed at {int(b['FN'])}) and added {int(b['FP'] - a['FP'])} false alarms
+(specificity {a['Specificity']*100:.1f}% → {b['Specificity']*100:.1f}%). The default 0.5 was kept for
+the reported results; 0.33 remains the option for a clinic that values sensitivity above all.
+:::
+""")
+```
+
+## Does the model learn real signal?
+
+```{python}
+#| label: fig-imp
+#| fig-cap: "Random Forest feature importance (top 10)."
+imp = pd.Series(s["importance_top10"]).sort_values()
+shape = lambda n: any(w in n for w in ["concav", "concave"])
+fig = go.Figure(go.Bar(x=imp.values, y=imp.index, orientation="h",
+                       marker_color=[AMBER if shape(n) else INDIGO for n in imp.index],
+                       hovertemplate="%{y}: %{x:.3f}<extra></extra>"))
+fig.add_scatter(x=[None], y=[None], mode="markers", marker=dict(color=INDIGO, size=10, symbol="square"), name="size (area, perimeter, radius)")
+fig.add_scatter(x=[None], y=[None], mode="markers", marker=dict(color=AMBER, size=10, symbol="square"), name="shape irregularity (concavity)")
+fig.update_layout(xaxis_title="importance", margin=dict(t=50))
+show(fig, 400)
+```
+
+The ranking matches clinical knowledge: malignant nuclei are **larger** and **more
+irregular**. That is reassuring evidence that the models learn the biology, not artefacts.
+
+## Final predictions on five unseen patients
+
+```{python}
+#| output: asis
+fp = pd.read_csv("data/ml-breast-cancer/final_predictions.csv")
+rows = [{"s": f"{r.iloc[0]} (#{r['Dataset index']})", "rad": r["mean radius"], "area": r["worst area"],
+         "cp": r["worst concave points"], "p": f"{float(r['P(malignant)']):.2f}",
+         "pred": r["Predicted (0.5)"], "act": r["Actual"], "ok": "✓" if str(r["Correct"]) == "True" else "✗"}
+        for _, r in fp.iterrows()]
+print(table(rows, [("s", "Patient"), ("rad", "mean radius"), ("area", "worst area"), ("cp", "worst concave pts"),
+                   ("p", "P(malignant)"), ("pred", "Predicted"), ("act", "Actual"), ("ok", "")],
+            num={"rad", "area", "cp", "p"}))
+```
+
+All five are correct. Patient 4 is the instructive one: its size is in the benign range,
+but its *worst concave points* is high and only two of its three neighbours are
+malignant (P = 0.67). **A borderline case like this should go to the pathologist for a
+close look**, which is exactly how such a tool should be used.
+
+## Limits, stated plainly
+
+- With 42 malignant test cases, one patient moves recall by 2.4 points; KNN and the tree
+  are within each other's CV standard deviation.
+- One institution, early 1990s: performance on other equipment and populations is unknown.
+- With k = 3, KNN probabilities are coarse and poorly calibrated (log loss 0.365 vs 0.096
+  for the Random Forest). If calibrated risk scores were needed, the Random Forest wins.
+- The 5:1 cost ratio is an assumption, to be agreed with clinicians.
+
+::: {.chips .lg}
+[scikit-learn]{} [Pipelines]{} [GridSearchCV]{} [Stratified K-fold]{} [Cost-sensitive thresholds]{} [ROC / PR analysis]{} [MCC]{}
+:::

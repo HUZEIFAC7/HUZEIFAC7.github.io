@@ -1,0 +1,8 @@
+Model,Log loss,Accuracy (%),Precision (%),Recall (%),F1-score (%),Swap consistency (%)
+Majority class,1.097,35.169,11.723,33.333,17.346,100.0
+TF-IDF + LR,1.036,46.828,46.551,46.177,45.769,99.773
+LightGBM (style),1.038,46.462,45.889,45.773,45.254,97.368
+DeBERTa-v3 (text only),1.075,43.203,43.558,42.854,42.864,59.707
+SA-DeBERTa (proposed),1.033,47.368,47.215,47.035,47.002,96.549
+SA-DeBERTa + temperature,1.033,47.368,47.215,47.035,47.002,
+SA-DeBERTa-Ens,1.017,48.397,48.227,47.731,47.323,

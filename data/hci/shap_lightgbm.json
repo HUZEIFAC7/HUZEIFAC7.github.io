@@ -1,0 +1,38 @@
+{
+  "mean_abs_shap": {
+    "len_diff": 0.08717,
+    "word_diff": 0.07839,
+    "log_chars_a": 0.06654,
+    "newlines_a": 0.06372,
+    "newlines_b": 0.06249,
+    "log_chars_b": 0.05806,
+    "refusal_b": 0.04286,
+    "refusal_a": 0.04085,
+    "log_words_a": 0.03398,
+    "log_words_b": 0.02936,
+    "code_blocks_b": 0.01586,
+    "code_blocks_a": 0.0158,
+    "list_items_b": 0.01289,
+    "list_items_a": 0.01192,
+    "headings_a": 0.0017,
+    "headings_b": 0.00153
+  },
+  "mean_shap_class_A": {
+    "log_chars_a": -0.00181,
+    "log_words_a": -0.01045,
+    "newlines_a": 0.00019,
+    "headings_a": -0.00022,
+    "list_items_a": 0.00063,
+    "code_blocks_a": -0.00097,
+    "refusal_a": -0.0033,
+    "log_chars_b": -0.00588,
+    "log_words_b": 0.00544,
+    "newlines_b": 0.00774,
+    "headings_b": -3e-05,
+    "list_items_b": 0.00026,
+    "code_blocks_b": -8e-05,
+    "refusal_b": 0.00379,
+    "len_diff": 0.00339,
+    "word_diff": -0.00059
+  }
+}

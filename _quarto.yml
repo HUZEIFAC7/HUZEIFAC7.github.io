@@ -1,0 +1,82 @@
+project:
+  type: website
+  output-dir: _site
+  execute-dir: project          # every page runs Python from the project root
+  resources:
+    - assets/
+  render:
+    - index.qmd
+    - about.qmd
+    - software.qmd
+    - projects/*.qmd
+
+website:
+  title: "Huzeifa Asif"
+  description: >
+    Data science and machine learning portfolio of Huzeifa Asif: MS Data
+    Science student at the University of Central Punjab and software engineer
+    who ships data tools that real businesses use every day.
+  site-url: https://huzeifac7.github.io
+  repo-url: https://github.com/HUZEIFAC7/HUZEIFAC7.github.io
+  favicon: assets/img/favicon.svg
+  page-navigation: true
+  back-to-top-navigation: true
+  open-graph: true
+  navbar:
+    title: "Huzeifa Asif"
+    logo: assets/img/favicon.svg
+    left:
+      - text: "Research"
+        href: projects/hci-chatbot-preference.qmd
+      - text: "Machine learning"
+        menu:
+          - text: "Breast cancer diagnosis: DT vs RF vs KNN"
+            href: projects/ml-breast-cancer.qmd
+          - text: "Student outcomes: ID3 decision tree"
+            href: projects/ml-id3-student-outcomes.qmd
+      - text: "Big data"
+        href: projects/bigdata-supply-chain.qmd
+      - text: "Software"
+        href: software.qmd
+      - text: "About"
+        href: about.qmd
+    right:
+      - icon: github
+        href: https://github.com/HUZEIFAC7
+        aria-label: GitHub
+      - icon: linkedin
+        href: https://www.linkedin.com/in/huzeifaasif
+        aria-label: LinkedIn
+      - text: "CV"
+        icon: download
+        href: assets/cv/Huzeifa_Asif_CV.pdf
+  page-footer:
+    left: "© 2026 Huzeifa Asif · Lahore, Pakistan"
+    right: "Built with [Quarto](https://quarto.org) and Python · every chart is computed from the project's own results"
+
+execute:
+  # Re-run a page only when its source changes; results are kept in _freeze/
+  # (commit it, so the published site matches what was rendered locally).
+  freeze: auto
+  echo: false
+  warning: false
+  message: false
+
+format:
+  html:
+    theme:
+      light: [cosmo, theme/light.scss, theme/common.scss]
+      dark:  [cosmo, theme/dark.scss,  theme/common.scss]
+    respect-user-color-scheme: true
+    toc: true
+    toc-depth: 2
+    toc-title: "On this page"
+    code-fold: true
+    code-summary: "Show code"
+    code-tools: false
+    fig-align: center
+    tbl-cap-location: top
+    link-external-newwindow: true
+    smooth-scroll: true
+    anchor-sections: true
+    title-block-banner: false

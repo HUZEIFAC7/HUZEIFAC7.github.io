@@ -1,0 +1,35 @@
+/*-- scss:defaults --*/
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+$body-bg:        #FAFAF8;
+$body-color:     #101828;
+$primary:        #4F46E5;
+$secondary:      #64748B;
+$success:        #15803D;
+$warning:        #B45309;
+$link-color:     #4338CA;
+$navbar-bg:      #FAFAF8;
+$navbar-fg:      #101828;
+$navbar-hl:      #4F46E5;
+$footer-bg:      #FAFAF8;
+$border-color:   rgba(16, 24, 40, 0.10);
+$code-bg:        #F1F0FA;
+
+/*-- scss:rules --*/
+:root, [data-bs-theme] {
+  --hz-bg:        #FAFAF8;
+  --hz-surface:   #FFFFFF;
+  --hz-surface-2: #F3F3F7;
+  --hz-ink:       #101828;
+  --hz-muted:     #556070;
+  --hz-line:      rgba(16, 24, 40, 0.10);
+  --hz-primary:   #4F46E5;
+  --hz-primary-ink: #3730A3;
+  --hz-primary-soft: rgba(79, 70, 229, 0.09);
+  --hz-accent:    #B45309;
+  --hz-accent-soft: rgba(217, 119, 6, 0.12);
+  --hz-live:      #15803D;
+  --hz-live-soft: rgba(21, 128, 61, 0.11);
+  --hz-shadow:    0 1px 2px rgba(16,24,40,.04), 0 12px 32px -16px rgba(16,24,40,.18);
+  --hz-shadow-hover: 0 2px 4px rgba(16,24,40,.05), 0 24px 48px -20px rgba(79,70,229,.35);
+}

@@ -1,0 +1,88 @@
+---
+title: "Will this order arrive late? Supply chain risk with PySpark"
+description: "Big data project in progress: predicting late deliveries on the DataCo smart supply chain dataset with Spark MLlib."
+---
+
+```{=html}
+<div class="case-head">
+  <span class="badge-status progress">In progress · Big Data</span>
+</div>
+<div class="glance">
+  <div><span>Question</span><p>Can late deliveries be predicted from what is known when the order is placed?</p></div>
+  <div><span>Data</span><p>DataCo Smart Supply Chain: global orders with products, customers, markets and shipping</p></div>
+  <div><span>Engine</span><p>Apache Spark (PySpark DataFrames + MLlib pipelines)</p></div>
+  <div><span>Status</span><p>Pipeline design and data ingestion; results will be published here</p></div>
+</div>
+```
+
+::: {.callout-note appearance="simple"}
+## This page is a living project log
+The project is under way this semester. The design below is final; the results section
+will be filled in from the pipeline's own output once the runs are complete, the same
+way every chart on the other pages is drawn from real result files.
+:::
+
+## Why it matters
+
+A late delivery is rarely a surprise to the data: shipping mode, destination market,
+product category, order timing and the promised schedule all carry signal. If the risk is
+known **when the order is placed**, a company can choose a faster shipping mode, warn the
+customer, or reorder stock earlier. This is the business problem behind the project.
+
+## Why Spark
+
+The dataset is large enough, and wide enough (dozens of columns of mixed types), that a
+single-machine pandas workflow becomes awkward to repeat and impossible to scale. The
+project uses Spark the way it would be used on a real cluster: lazy DataFrame
+transformations, a declared schema, and an **MLlib `Pipeline`** whose every step
+(indexing, encoding, assembling, scaling, modelling) is fitted on training data only and
+can be re-run on new data unchanged.
+
+## The pipeline
+
+```{mermaid}
+flowchart LR
+  A[("Raw CSV<br/>DataCo orders")] --> B["Ingest with<br/>explicit schema"]
+  B --> C["Clean & dedupe<br/>parse dates"]
+  C --> D["Drop leaking<br/>columns"]
+  D --> E["Feature engineering<br/>time · market · shipping"]
+  E --> F["MLlib Pipeline<br/>StringIndexer → OneHot →<br/>VectorAssembler → Scaler"]
+  F --> G["Models<br/>LogReg · RF · GBT"]
+  G --> H["CrossValidator<br/>AUC · F1 · recall"]
+  H --> I[("Results &<br/>feature importance")]
+  classDef done fill:#DCFCE7,stroke:#16A34A,color:#14532D;
+  classDef now fill:#FEF3C7,stroke:#D97706,color:#78350F;
+  classDef todo fill:#E0E7FF,stroke:#6366F1,color:#1E1B4B;
+  class A done; class B now; class C,D,E,F,G,H,I todo;
+```
+
+<ol class="steps">
+  <li class="done"><b>Problem framing and dataset</b><span>Binary target: late delivery risk. Business metric: recall on late orders, at a controlled false-alarm rate.</span></li>
+  <li class="now"><b>Ingestion</b><span>Spark session, explicit schema (no type inference on a large CSV), basic profiling of every column.</span></li>
+  <li><b>Cleaning and leakage audit</b><span>Columns only known <i>after</i> shipping (real shipping days, delivery status, shipping date) describe the outcome and must be dropped, or the model learns the answer instead of the risk.</span></li>
+  <li><b>Feature engineering</b><span>Order weekday, month and hour; scheduled shipping days; shipping mode; market, region and country; product category; order value and discount.</span></li>
+  <li><b>MLlib pipeline</b><span>StringIndexer and OneHotEncoder for categories, VectorAssembler and StandardScaler, fitted on the training split only.</span></li>
+  <li><b>Models and tuning</b><span>Logistic regression (baseline), Random Forest and Gradient-Boosted Trees, tuned with CrossValidator on a stratified split.</span></li>
+  <li><b>Evaluation</b><span>ROC-AUC, PR-AUC, F1 and recall on late orders; feature importance; error analysis by market and shipping mode.</span></li>
+  <li><b>Scaling notes</b><span>Partitioning, caching and run times, to show what changes when the data no longer fits on one machine.</span></li>
+</ol>
+
+## The trap this project is designed to avoid
+
+::: {.insight}
+**Target leakage.** In this kind of dataset, some columns are recorded after the parcel
+has shipped. A model given "actual days for shipping" next to "scheduled days" can reach
+near-perfect accuracy by subtracting one from the other, and is useless in practice. The
+audit in step 3 decides, column by column, what is genuinely known at order time. Getting
+this right matters more than any choice of algorithm.
+:::
+
+## Results
+
+*Coming soon.* This section will show the model comparison, the precision–recall
+trade-off on late orders and the most important risk factors, generated from the
+pipeline's saved metrics.
+
+::: {.chips .lg}
+[Apache Spark]{} [PySpark]{} [Spark MLlib]{} [Pipelines]{} [CrossValidator]{} [Gradient-Boosted Trees]{} [Classification]{}
+:::

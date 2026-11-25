@@ -1,0 +1,58 @@
+{
+  "log_loss": 1.0395619869232178,
+  "accuracy": 0.469327291739282,
+  "precision": 0.4691653222185191,
+  "recall": 0.4630502496354872,
+  "f1": 0.45933972475893853,
+  "confusion": [
+    [
+      1093,
+      631,
+      294
+    ],
+    [
+      586,
+      1052,
+      328
+    ],
+    [
+      608,
+      598,
+      548
+    ]
+  ],
+  "swap_consistency": 0.9590449634018822,
+  "single_order": {
+    "log_loss": 1.0412518978118896,
+    "accuracy": 0.46549320320669224,
+    "precision": 0.4659976223672211,
+    "recall": 0.45919086771306983,
+    "f1": 0.4552284623804572
+  },
+  "val": {
+    "log_loss": 1.0408246517181396,
+    "accuracy": 0.46697949252693777,
+    "precision": 0.46687174084903643,
+    "recall": 0.46287620662330614,
+    "f1": 0.45779652473110954,
+    "swap_consistency": 0.962113312478276
+  },
+  "train_minutes": 86.64715004762014,
+  "args": {
+    "mode": "style",
+    "backbone": "/home/ensai/Desktop/Huzeifa_Proj/MSDS/models/deberta-v3-base",
+    "max_len": 512,
+    "prompt_len": 96,
+    "epochs": 1,
+    "bs": 2,
+    "accum": 8,
+    "lr": 2e-05,
+    "head_lr": 0.0001,
+    "evals_per_epoch": 8,
+    "val_subset": 1500,
+    "train_frac": 1.0,
+    "grad_ckpt": false,
+    "resume": true,
+    "max_steps": 0
+  }
+}

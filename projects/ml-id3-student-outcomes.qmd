@@ -1,0 +1,249 @@
+---
+title: "Who will fail the final exam? An ID3 decision tree, by hand and in code"
+description: "Entropy and information gain computed by hand for an early-warning system, then checked line by line with a from-scratch ID3 implementation."
+---
+
+```{=html}
+<div class="case-head">
+  <span class="badge-status research">Machine learning · MS Data Science</span>
+</div>
+<div class="actions">
+  <a class="btn-hz primary" href="../assets/papers/ID3_Decision_Tree_Report.pdf"><i class="bi bi-file-earmark-pdf"></i> Hand-written derivation (PDF)</a>
+</div>
+<div class="glance">
+  <div><span>Question</span><p>Which students are likely to fail, early enough to intervene?</p></div>
+  <div><span>Data</span><p>20 students · attendance, study hours, assignments, previous grade</p></div>
+  <div><span>Method</span><p>ID3: greedy splits on maximum information gain, no library</p></div>
+  <div><span>Output</span><p>A 5-leaf tree, 5 IF–THEN rules, predictions for 5 new students</p></div>
+</div>
+```
+
+```{python}
+#| label: setup
+import math
+import pandas as pd
+import plotly.graph_objects as go
+from py.charts import show, table, INDIGO, AMBER, SLATE, TEXT
+
+# The 20 training students, rebuilt from the subsets listed in the report.
+def ids(*n): return {f"S{i:02d}" for i in n}
+attendance = {"High": ids(1, 2, 6, 10, 13, 16, 19), "Medium": ids(4, 7, 9, 12, 14, 17, 20), "Low": ids(3, 5, 8, 11, 15, 18)}
+study = {"High": ids(1, 4, 8, 10, 12, 18, 19, 20), "Medium": ids(2, 5, 7, 13, 14, 15), "Low": ids(3, 6, 9, 11, 16, 17)}
+assignment = {"Yes": ids(1, 2, 4, 6, 7, 8, 11, 15, 17, 19, 20), "No": ids(3, 5, 9, 10, 12, 13, 14, 16, 18)}
+prev = {"Good": ids(1, 2, 4, 7, 8, 10, 12, 15, 17), "Poor": ids(3, 5, 6, 9, 11, 13, 14, 16, 18, 19, 20)}
+passed = ids(1, 2, 4, 6, 7, 8, 10, 12, 15, 17, 19, 20)
+
+def lookup(groups, s): return next(k for k, v in groups.items() if s in v)
+students = sorted(passed | ids(3, 5, 9, 11, 13, 14, 16, 18))
+D = pd.DataFrame([{"ID": s, "Attendance": lookup(attendance, s), "Study Hours": lookup(study, s),
+                   "Assignment": lookup(assignment, s), "Previous Grade": lookup(prev, s),
+                   "Result": "Pass" if s in passed else "Fail"} for s in students])
+FEATURES = ["Attendance", "Study Hours", "Assignment", "Previous Grade"]
+
+def entropy(y):
+    n = len(y)
+    return -sum((c / n) * math.log2(c / n) for c in y.value_counts() if c) if n else 0.0
+
+def info_gain(df, a):
+    return entropy(df.Result) - sum(len(g) / len(df) * entropy(g.Result) for _, g in df.groupby(a))
+
+def id3(df, feats):
+    """Return a nested dict tree. Ties broken by feature order, as in the report."""
+    if df.Result.nunique() == 1:
+        return df.Result.iloc[0]
+    if not feats:
+        m = df.Result.value_counts()
+        return "Fail" if m.get("Fail", 0) >= m.get("Pass", 0) else "Pass"
+    gains = {a: info_gain(df, a) for a in feats}
+    best = max(feats, key=lambda a: (round(gains[a], 12), -feats.index(a)))
+    return {best: {v: id3(g, [f for f in feats if f != best]) for v, g in df.groupby(best)}}
+
+tree = id3(D, FEATURES)
+```
+
+## The data
+
+A university wants to flag students likely to fail their final exam while there is still
+time to help. Twenty historical records describe four habits and the result:
+
+```{python}
+#| output: asis
+print(table(D.to_dict("records"), [(c, c) for c in D.columns]))
+```
+
+```{python}
+#| output: asis
+H = entropy(D.Result)
+print(f"""
+With 12 passes and 8 fails, the starting entropy is
+
+$$H(S) = -\\left[0.6\\log_2 0.6 + 0.4\\log_2 0.4\\right] = {H:.4f} \\text{{ bits}},$$
+
+close to the 1-bit maximum: knowing nothing else, we are very unsure about any student.
+""")
+```
+
+## Choosing the root: hand versus code
+
+ID3 picks the attribute whose split removes the most uncertainty,
+$IG(S, A) = H(S) - \sum_v \frac{|S_v|}{|S|} H(S_v)$. The values in the report were
+derived by hand with five-decimal logarithms; the code recomputes them exactly.
+
+```{python}
+#| label: fig-ig
+#| fig-cap: "Information gain of each attribute at the root. Previous Grade wins and removes 52% of the uncertainty."
+hand = {"Previous Grade": 0.5060, "Assignment": 0.3853, "Study Hours": 0.1780, "Attendance": 0.0913}
+ig = pd.Series({a: info_gain(D, a) for a in FEATURES}).sort_values()
+fig = go.Figure(go.Bar(x=ig.values, y=ig.index, orientation="h",
+                       marker_color=[INDIGO if a == ig.idxmax() else SLATE for a in ig.index],
+                       text=[f"{v:.4f}" for v in ig.values], textposition="outside", cliponaxis=False,
+                       hovertemplate="%{y}: %{x:.4f} bits<extra>computed</extra>", name="computed"))
+fig.add_scatter(x=[hand[a] for a in ig.index], y=ig.index, mode="markers", name="by hand (report)",
+                marker=dict(symbol="line-ns", size=26, line=dict(width=3, color=AMBER)),
+                hovertemplate="%{y}: %{x:.4f}<extra>by hand</extra>")
+fig.update_layout(xaxis=dict(title="information gain (bits)", range=[0, 0.62]), margin=dict(t=50))
+show(fig, 300)
+```
+
+```{python}
+#| output: asis
+# Check every hand-computed gain in the report, at every level of the tree.
+poor = D[D["Previous Grade"] == "Poor"]
+poor_yes = poor[poor.Assignment == "Yes"]
+checks = [("Root", "Previous Grade", 0.5060, info_gain(D, "Previous Grade")),
+          ("Root", "Assignment", 0.3853, info_gain(D, "Assignment")),
+          ("Root", "Study Hours", 0.1780, info_gain(D, "Study Hours")),
+          ("Root", "Attendance", 0.0913, info_gain(D, "Attendance")),
+          ("Grade = Poor", "Assignment", 0.5503, info_gain(poor, "Assignment")),
+          ("Grade = Poor", "Study Hours", 0.2668, info_gain(poor, "Study Hours")),
+          ("Grade = Poor", "Attendance", 0.2313, info_gain(poor, "Attendance")),
+          ("Poor, Assignment = Yes", "Attendance", 0.8113, info_gain(poor_yes, "Attendance")),
+          ("Poor, Assignment = Yes", "Study Hours", 0.3113, info_gain(poor_yes, "Study Hours"))]
+rows = [{"node": n, "a": a, "h": f"{h:.4f}", "c": f"{c:.4f}", "ok": "✓ match" if abs(h - c) < 5e-4 else "✗ differs"}
+        for n, a, h, c in checks]
+n_ok = sum(r["ok"].startswith("✓") for r in rows)
+print(table(rows, [("node", "Node"), ("a", "Attribute"), ("h", "By hand"), ("c", "Computed"), ("ok", "")],
+            num={"h", "c"}))
+print(f"\n**{n_ok} of {len(rows)} hand-computed information gains match the code to four decimals.**\n")
+```
+
+## The tree
+
+The recursion stops whenever a branch is pure. Every branch here ends pure, so none of
+the tie-breaking rules was ever needed, and **Study Hours never appears**.
+
+```{mermaid}
+%%| fig-cap: "The final ID3 tree. Counts are training students reaching each node."
+flowchart TD
+  R{{"Previous Grade<br/>20 students"}} -->|Good| P1(["PASS · 9/9"])
+  R -->|Poor| A{{"Assignment<br/>11 students"}}
+  A -->|No| F1(["FAIL · 7/7"])
+  A -->|Yes| T{{"Attendance<br/>4 students"}}
+  T -->|High| P2(["PASS · 2/2"])
+  T -->|Medium| P3(["PASS · 1/1"])
+  T -->|Low| F2(["FAIL · 1/1"])
+  classDef pass fill:#DCFCE7,stroke:#16A34A,color:#14532D;
+  classDef fail fill:#FFE4E6,stroke:#E11D48,color:#881337;
+  classDef node fill:#E0E7FF,stroke:#6366F1,color:#1E1B4B;
+  class P1,P2,P3 pass; class F1,F2 fail; class R,A,T node;
+```
+
+```{python}
+#| output: asis
+def rules(t, path=()):
+    if isinstance(t, str):
+        yield path, t; return
+    (a, branches), = t.items()
+    for v, sub in branches.items():
+        yield from rules(sub, path + (f"{a} = {v}",))
+out = ["The code produces the same tree, read as rules:\n"]
+for i, (p, leaf) in enumerate(rules(tree), 1):
+    out.append(f"{i}. **IF** {' **AND** '.join(p)} **THEN** {leaf}")
+print("\n".join(out))
+```
+
+## Try it: predict a student
+
+Pick a profile and follow the path through the tree. Students who land on a **Fail**
+leaf would be flagged for tutoring, attendance follow-up and assignment reminders.
+
+```{=html}
+<div class="id3-widget" id="id3">
+  <div class="controls">
+    <div><label for="id3-att">Attendance</label><select id="id3-att"><option>High</option><option selected>Medium</option><option>Low</option></select></div>
+    <div><label for="id3-study">Study hours</label><select id="id3-study"><option selected>High</option><option>Medium</option><option>Low</option></select></div>
+    <div><label for="id3-asg">Assignment submitted</label><select id="id3-asg"><option selected>Yes</option><option>No</option></select></div>
+    <div><label for="id3-prev">Previous grade</label><select id="id3-prev"><option>Good</option><option selected>Poor</option></select></div>
+  </div>
+  <div class="path" id="id3-path" aria-live="polite"></div>
+  <p class="why" id="id3-why"></p>
+</div>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const support = {R1: "all 9 training students with a good previous grade passed",
+    R2: "all 7 training students with a poor grade and no assignment failed",
+    R3: "rests on 2 training students", R4: "rests on a single training student (S20)",
+    R5: "rests on a single training student (S11): treat with caution"};
+  function run() {
+    const att = $("id3-att").value, asg = $("id3-asg").value, prev = $("id3-prev").value;
+    const steps = [`Previous Grade = ${prev}`]; let verdict, rule;
+    if (prev === "Good") { verdict = "Pass"; rule = "R1"; }
+    else {
+      steps.push(`Assignment = ${asg}`);
+      if (asg === "No") { verdict = "Fail"; rule = "R2"; }
+      else { steps.push(`Attendance = ${att}`);
+        verdict = att === "Low" ? "Fail" : "Pass"; rule = att === "High" ? "R3" : att === "Medium" ? "R4" : "R5"; }
+    }
+    $("id3-path").innerHTML = steps.map(s => `<span class="step">${s}</span>`).join('<span class="sep">→</span>')
+      + `<span class="sep">→</span><span class="verdict ${verdict.toLowerCase()}">${verdict.toUpperCase()}</span>`;
+    let why = `Rule ${rule}: ${support[rule]}.`;
+    if (prev === "Good" && (asg === "No" || $("id3-study").value === "Low"))
+      why += " Note the weak spot: the tree ignores effort for good-grade students, because no such student failed in the training data.";
+    else if ($("id3-study").value && !steps.some(s => s.startsWith("Study")))
+      why += " Study hours are never consulted.";
+    $("id3-why").textContent = why;
+  }
+  ["id3-att","id3-study","id3-asg","id3-prev"].forEach(id => $(id).addEventListener("change", run));
+  run();
+})();
+</script>
+```
+
+## Five new students
+
+```{python}
+#| output: asis
+def predict(t, row):
+    while not isinstance(t, str):
+        (a, branches), = t.items()
+        t = branches.get(row[a], "Fail")
+    return t
+new = pd.DataFrame([("A", "High", "Medium", "Yes", "Good"), ("B", "Low", "Low", "No", "Poor"),
+                    ("C", "Medium", "High", "Yes", "Poor"), ("D", "High", "Low", "No", "Good"),
+                    ("E", "Low", "Medium", "Yes", "Poor")], columns=["Student"] + FEATURES)
+report = {"A": "Pass", "B": "Fail", "C": "Pass", "D": "Pass", "E": "Fail"}
+new["Prediction"] = [predict(tree, r) for _, r in new.iterrows()]
+new["Report"] = new.Student.map(report)
+new["Prediction"] = [f"<b>{p}</b>" for p in new.Prediction]
+print(table(new.to_dict("records"), [(c, c) for c in new.columns]))
+```
+
+Students **B** and **E** would be flagged. Student **D** is the cautionary tale: a good
+previous grade sends them straight to *Pass*, even with low study hours and no
+assignment, simply because the training data contains no counter-example.
+
+## What a 20-row tree can and cannot tell you
+
+- **It fits the training data perfectly** (100%), but two leaves rest on one student
+  each. Without held-out data, its real accuracy is unknown.
+- **Greedy splitting can miss useful combinations**; study hours never get a say.
+- **Information gain favours many-valued attributes**, and ID3 cannot handle continuous
+  values or missing data without help.
+- Next steps: more cohorts and cross-validation, **C4.5 or CART with pruning**, numeric
+  features (attendance %, weekly hours), Fail-class recall as the target metric, and a
+  fairness check before any decision about real students.
+
+::: {.chips .lg}
+[Entropy]{} [Information gain]{} [ID3 from scratch]{} [pandas]{} [Interpretable ML]{}
+:::

@@ -1,0 +1,138 @@
+---
+title: "Software that real businesses run on"
+description: "Desktop, mobile and data tools built by Huzeifa Asif and used every day by businesses in the UAE and Pakistan."
+---
+
+::: {.lead-text}
+Before data science, and alongside it, I build software for businesses I know from the
+inside: my father's trading company in Sharjah, my family's restaurant in Lahore, and
+plant nurseries across Pakistan. These are not demos. People print cheques, bill
+customers and close shifts with them every day, which taught me to care about data
+integrity, offline use and testing. The code is private, so this page describes what
+each system does and how it is built.
+:::
+
+::: {.kpis}
+::: {.kpi .hl}
+**3**
+[apps in daily business use]{}
+:::
+::: {.kpi}
+**2**
+[countries: UAE and Pakistan]{}
+:::
+::: {.kpi}
+**100%**
+[test coverage enforced on the cheque system's money, words and date rules]{}
+:::
+::: {.kpi}
+**EN · اردو**
+[bilingual mobile app with right-to-left Urdu]{}
+:::
+:::
+
+::: {.proj #cheque-system}
+[Live in production]{.badge-status .live}
+
+## Cheque Management System
+
+*Desktop app · Zahrh Esther Hardware Trading LLC, Sharjah, UAE · in daily use since October 2026*
+
+A Windows app to write, print, save and track supplier cheques for a hardware trading
+company. The finance team uses it with **real cheque books, real suppliers and real
+printed cheques**, on several office computers sharing one database.
+
+- **Printing that matches the paper.** A cheque layout designer with per-bank offsets
+  (verified on SIB and RAK Bank cheques), range printing, and amounts converted to words.
+- **The whole cheque life cycle:** pending, printed, cleared, bounced, stopped, cancelled
+  and spoiled, plus security cheques, received customer cheques, supplier bills and
+  balances, payment vouchers, a calendar view and reports.
+- **Built for an office, not a demo:** user roles (Admin and Staff), auto-lock, a full
+  change log, password-protected daily backups, and an **offline mode** that saves and
+  prints cheques without internet and syncs them later.
+- **Engineering discipline:** a pnpm monorepo with pure business rules in their own
+  package (**100% test coverage enforced** for money, words and dates), database migrations
+  tested in PGlite against every role and function, Row-Level Security in Supabase, and a
+  hardened Electron setup (context isolation, sandbox, no secret keys in the app).
+
+::: {.chips .lg}
+[Electron]{} [React]{} [TypeScript]{} [Supabase / PostgreSQL]{} [Row-Level Security]{} [Vitest]{} [PGlite]{} [Windows installer]{}
+:::
+:::
+
+::: {.proj #pakistan-plants-billing}
+[In production]{.badge-status .live}
+
+## Pakistan Plants: billing for nurseries
+
+*Mobile app · iOS and Android · used day to day by businesses in Lahore*
+
+A billing and credit-tracking app made for Pakistani plant nurseries, fully bilingual in
+**English and Urdu** (Noto Nastaliq, right-to-left layout).
+
+- **Invoices in seconds** from a catalogue of **280+ plants** with English and Urdu names,
+  eight bill templates, PDF sharing straight to WhatsApp and automatic invoice numbering.
+- **Udhaar (credit) tracking** per customer, partial and advance payments, overdue alerts
+  and ageing buckets (0–30, 31–60, 60+ days).
+- **Reports** by date, client and plant, exported to PDF or CSV; a customer database with
+  contact import and one-tap call or WhatsApp.
+- Store listings, privacy policy, terms and a testing checklist prepared for release.
+
+::: {.chips .lg}
+[React Native / Expo]{} [TypeScript]{} [Supabase]{} [i18n (EN / UR, RTL)]{} [PDF generation]{} [EAS]{}
+:::
+:::
+
+::: {.proj #dimsum-pos}
+## DimSum POS: a restaurant point-of-sale
+
+*Desktop app · for my family's restaurant in Lahore*
+
+An offline-first Windows point-of-sale system, designed from how the restaurant actually
+runs: I also manage its staff, suppliers and marketing.
+
+- **Specified before it was coded:** a software requirements specification, an
+  entity-relationship design, the architecture, 16 user flows, a screen and permission
+  matrix and wireframes, then milestones.
+- **Orders** for dine-in, takeaway, phone delivery and Foodpanda (with channel pricing);
+  kitchen tickets and customer receipts on a **thermal printer**.
+- **Controls:** PIN login for owner and cashiers, discounts and voids that need the owner's
+  PIN, refunds with reason codes, inventory with low-stock alerts, expenses, and shift
+  closing with cash reconciliation.
+
+::: {.chips .lg}
+[Electron]{} [React]{} [TypeScript]{} [Drizzle ORM]{} [Thermal printing]{} [Turborepo]{}
+:::
+:::
+
+::: {.proj #excel-automation}
+## Excel automation suite for finance
+
+*Desktop app · Zahrh Esther Hardware Trading LLC · 2022*
+
+My first software for the business: a Python desktop application that replaced a manual
+Excel routine for the chief accountant. It loads the month's transaction files, categorises
+them automatically and produces financial summaries to download, cutting manual data
+entry and the errors that come with it.
+
+::: {.chips .lg}
+[Python]{} [PyQt5]{} [pandas]{} [Excel automation]{}
+:::
+
+[Source on GitHub →](https://github.com/HUZEIFAC7/DesktopApplicationinPython)
+:::
+
+::: {.proj #eyeq}
+## EyeQ: eye tracking for learning
+
+*Final-year project · BSc Computer Science, Bahria University*
+
+A cross-platform mobile app that tracks students' eye movements with computer vision to
+estimate how difficult a quiz question is and how attentive the learner is. The capture
+and analysis code was written and optimised for real-time feedback, with TensorFlow and
+PyTorch models and Firebase for data, and the app was **tested with 20 students**.
+
+::: {.chips .lg}
+[Python]{} [TensorFlow]{} [PyTorch]{} [OpenCV]{} [React Native]{} [Firebase]{}
+:::
+:::

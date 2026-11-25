@@ -1,0 +1,38 @@
+{
+  "raw_rows": 57477,
+  "n_models": 64,
+  "raw_class_counts": [
+    20064,
+    19652,
+    17761
+  ],
+  "multi_turn_share": 0.13116550968213372,
+  "dropped_null_or_empty": 187,
+  "dropped_duplicates": 75,
+  "clean_rows": 57215,
+  "clean_class_counts": [
+    19982,
+    19582,
+    17651
+  ],
+  "longer_wins_non_tie": 0.6157365281569103,
+  "resp_chars_median": 1041.0,
+  "train_rows": 45723,
+  "train_class_counts": [
+    15983,
+    15659,
+    14081
+  ],
+  "val_rows": 5754,
+  "val_class_counts": [
+    1981,
+    1957,
+    1816
+  ],
+  "test_rows": 5738,
+  "test_class_counts": [
+    2018,
+    1966,
+    1754
+  ]
+}
